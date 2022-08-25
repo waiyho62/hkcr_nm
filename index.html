@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FIRST NM EXAM MCQ WRITER (PHYSICS)</title>
+FIRST NM EXAM MCQ WRITER (PHYSICS)
+<br><br>
+
+<style>
+div {
+  height: 300px;
+  width: 805px;
+}
+#box img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+</style>
+</head>
+
+<body>
+<form action="javascript:SaveQuestion();">
+<label for="authorList">Author List:</label>
+<select id="authorList" onchange="SelectAuthor()"></select>
+
+<label for="enterAuthor">Enter Author:</label>
+<input type="text" id="enterAuthor" name="enterAuthor" size="20" required>
+<br><br>
+
+<label for="question">Question</label>
+<input type="number" id="questionNumber" name="questionNumber" value=1 disabled>
+<br>
+<textarea id="question" name="question" rows="10" cols="106" maxlength="800" onfocusout="RemoveSemicolonBreak('question')" required>
+</textarea><br><br>
+
+
+<div id="box" name="box">
+<label for="myFile">Add an image:</label>
+    <input id="file-upload" type="file" />
+    <input type="text" id="imageUrl" name="imageUrl" disabled>
+    <button type="button" onclick="NewTab()">
+        Open full size image
+    </button>
+    <button type="button" onclick="RemoveImage()">Remove Image</button>
+    <img id="image-display">
+</div>
+
+<br><br>
+Press the buttons [Choice A] to [Choice E] to select T/F and [Answer] to sort choices and generate answer
+
+<br><br>
+<button type="button" onclick="TrueFalse('answerA')">Choice A:</button>
+<input type="text" id="choiceA" name="choiceA" size="100" onfocusout="RemoveSemicolon('choiceA')" required>
+<input type="text" id="answerA" name="answerA" size="1" value="F" required disabled>
+<br><br>
+
+<button type="button" onclick="TrueFalse('answerB')">Choice B:</button>
+<input type="text" id="choiceB" name="choiceB" size="100" onfocusout="RemoveSemicolon('choiceB')" required>
+<input type="text" id="answerB" name="answerB" size="1" value="F" required disabled>
+<br><br>
+
+<button type="button" onclick="TrueFalse('answerC')">Choice C:</button>
+<input type="text" id="choiceC" name="choiceC" size="100" onfocusout="RemoveSemicolon('choiceC')"  required>
+<input type="text" id="answerC" name="answerC" size="1" value="F" required disabled>
+<br><br>
+
+<button type="button" onclick="TrueFalse('answerD')">Choice D:</button>
+<input type="text" id="choiceD" name="choiceD" size="100" onfocusout="RemoveSemicolon('choiceD')"  required>
+<input type="text" id="answerD" name="answerD" size="1" value="F" required disabled>
+<br><br>
+
+<button type="button" onclick="TrueFalse('answerE')">Choice E:</button>
+<input type="text" id="choiceE" name="choiceE" size="100" onfocusout="RemoveSemicolon('choiceE')"  required>
+<input type="text" id="answerE" name="answerE" size="1" value="F" required disabled>
+<br><br>
+
+<button type="button" onclick="SortChoices()">Answer:</button>
+<input type="text" id="answer" name="answer" size="2" disabled required>
+
+<label for="topic">Topic List:</label>
+<select id="topic" name="topic" onchange="ChangeKeywordList()"> 
+  <option value="">-- Topic --</option> 
+  <option value="1">Radiopharmacy</option> 
+  <option value="2">Radiation detectors</option> 
+  <option value="3">Gamma Camera</option>
+  <option value="4">Gamma Camera QC</option>
+  <option value="5">PET/Cyclotron</option>
+  <option value="6">Digital Image Processing</option>
+  <option value="7">SPECT Reconstruction</option>
+  <option value="8">Statistics</option>
+  <option value="9">Bone Densitometry</option>
+  <option value="10">Tracer Kinetics</option>
+  <option value="11">Radiation Protection & Regulations</option>
+  <option value="12">Nuclear Decay</option>
+  <option value="13">CT/MR Physics</option>
+  <option value="14">Miscellaneous</option>
+</select> 
+
+<label for="topicId">Topic ID:</label>
+<input type="text" id="topicId" name="topicId" size="2" disabled required>
+<br><br>
+
+<label for="keyword">Keyword List:</label>
+<select id="keyword" name="keyword" onchange="SelectKeyword()">
+</select>
+
+<label for="enterKeyword">Enter Keyword:</label>
+<input type="text" id="enterKeyword" name="enterKeyword" size="30" required>
+<button type="submit">Save Question</button>
+<button type="button" id="prepare-button">Prepare Zip File</button>
+<a id="download-link" download="ToHKCR">Download</a>
+</form>
+
+<br>
+<label for="savedQuestions">Saved Questions</label>
+<br>
+<textarea id="savedQuestions" 
+		  name="savedQuestion" 
+          rows="10" cols="106" 
+          maxlength="800" disabled>Question;Figure;ChoiceA;ChoiceB;ChoiceC;ChoiceD;ChoiceE;Answer;TopicID;Keyword;Author</textarea><br><br>
+
+<script src="./jszip.min.js"></script>
+//<script src="./Authors.js"></script>
+//<script src="./KeywordsByTopics.js"></script>
+<script>
+const authors = ['Elsa_Ho','Jason_Ho','Tintin_Ho','WY_Ho'];
+const keywordsByTopic = {};
+  keywordsByTopic['1'] = ['Alzheimer\' disease','Dementia','Luxury perfusion'];
+  keywordsByTopic['2'] = ['Amyloidosis','Hibernating myocardium','MUGA scan','Reverse redistribution'];
+  keywordsByTopic['3'] = ['Amiodarone induced thyrotoxicosis','Hyperparathyroidism','Thyroid adenoma'];
+
+const downloadLink = document.querySelector("#download-link");
+const prepareButton = document.querySelector("#prepare-button");
+const savedImages = [];
+
+function SelectAuthor() {
+  var e = document.getElementById("authorList");
+  var selectedKeyword = e.options[e.selectedIndex].text;
+  enterAuthor.value = selectedKeyword;
+}
+
+function ChangeKeywordList() {
+  var e = document.getElementById("topic");
+  var selectedTopicId = e.options[e.selectedIndex].value;
+  topicId.value = selectedTopicId;
+  var keywordList = document.getElementById("topic");
+  var topicList = document.getElementById("keyword");
+  var selKeyword = keywordList.options[keywordList.selectedIndex].value;
+  while (topicList.options.length) {
+    topicList.remove(0);
+  }
+  var keywords = keywordsByTopic[selKeyword];
+  if (keywords) {
+    var i;
+    for (i = 0; i < keywords.length; i++) {
+      var keyword = new Option(keywords[i], i);
+      topicList.options.add(keyword);
+    }
+  };
+  var e = document.getElementById("keyword");
+  var selectedKeyword = e.options[0].text;
+  enterKeyword.value = selectedKeyword;
+}
+
+function SelectKeyword() {
+  var e = document.getElementById("keyword");
+  var selectedKeyword = e.options[e.selectedIndex].text;
+  enterKeyword.value = selectedKeyword;
+}
+
+var select = document.getElementById("authorList");
+for (var i = 0; i < authors.length; i++) {
+	var optn = authors[i];
+    var el = document.createElement("option");
+	el.textContent = optn;
+    el.value = optn;
+	select.appendChild(el);
+	};
+    var e = document.getElementById("authorList");
+    enterAuthor.value = e.options[0].text;
+
+let storedImage = null
+let storedImageUrl = null
+
+const imageDisplay = document.querySelector("#image-display")
+const fileUpload = document.querySelector("#file-upload")
+
+fileUpload.onchange = function () {
+    storedImage = fileUpload.files[0];
+    storedImageUrl = URL.createObjectURL(storedImage);
+    imageUrl.value = storedImageUrl;
+    imageDisplay.setAttribute("src", storedImageUrl);
+}
+
+function RemoveImage() {
+    storedImage = null;
+    imageUrl.value = null;
+    imageDisplay.setAttribute("src", null);
+}
+
+function TrueFalse(answerId) {
+  var x = document.getElementById(answerId);
+  if (x.value == "T") {
+    x.value = "F";
+  } else {
+    x.value = "T";
+  }
+}
+
+function RemoveSemicolonBreak(fieldId) {
+  var x = document.getElementById(fieldId);
+  x.value = x.value.replace(/\;/g, ",");
+  x.value = x.value.replace(/[\r\n]/g, " ")
+}
+
+function RemoveSemicolon(fieldId) {
+  var x = document.getElementById(fieldId);
+  x.value = x.value.replace(/\;/g, ",");
+}
+
+function NewTab() {
+  window.open(storedImageUrl, "_blank");
+}
+
+function SortChoices() {
+  if (choiceA.value && choiceB.value && choiceC.value && choiceD.value && choiceE.value)
+  {var choices = [choiceA.value + answerA.value,
+  				choiceB.value + answerB.value, 
+                choiceC.value + answerC.value, 
+                choiceD.value + answerD.value, 
+                choiceE.value + answerE.value];
+  choices.sort();
+  choiceA.value = choices[0].slice(0, -1);
+  choiceB.value = choices[1].slice(0, -1);
+  choiceC.value = choices[2].slice(0, -1);
+  choiceD.value = choices[3].slice(0, -1);
+  choiceE.value = choices[4].slice(0, -1);
+  answerA.value = choices[0].slice(-1);
+  answerB.value = choices[1].slice(-1);
+  answerC.value = choices[2].slice(-1);
+  answerD.value = choices[3].slice(-1);
+  answerE.value = choices[4].slice(-1);
+  answer.value = answerA.value + answerB.value + answerC.value + answerD.value +answerE.value
+  } else {
+  answer.value = null;
+  alert("Fill in choice A to choice E");
+  }
+}
+
+function SaveQuestion(){
+  let savedImageName = ""
+  if (storedImage) { 
+    savedImageName = enterAuthor.value + "_Question" + questionNumber.value + ".jpg";
+    savedImages.push([savedImageName,storedImage])
+  }
+
+  savedQuestions.value += '\r\n';
+  savedQuestions.value += question.value + ";";
+  savedQuestions.value += savedImageName + ";";
+  savedQuestions.value += "a. " + choiceA.value + ";";
+  savedQuestions.value += "b. " + choiceB.value + ";";
+  savedQuestions.value += "c. " + choiceC.value + ";";
+  savedQuestions.value += "d. " + choiceD.value + ";";
+  savedQuestions.value += "e. " + choiceE.value + ";";
+  savedQuestions.value += answer.value + ";";
+  savedQuestions.value += topicId.value + ";";
+  savedQuestions.value += enterKeyword.value + ";";
+  savedQuestions.value += enterAuthor.value;
+
+  var x = Number(questionNumber.value) + 1;
+  questionNumber.value = x;
+}
+
+prepareButton.onclick = function () {
+    
+    const zipFile = new JSZip();
+    
+  for (var i = 0; i < savedImages.length; i++) {
+    if (savedImages[i][1]) {zipFile.folder("Images").file(savedImages[i][0], savedImages[i][1])};
+  }  
+
+    zipFile.file("PartI_Physics_Questions.txt", savedQuestions.value);
+
+    zipFile.generateAsync({ type: "blob" }).then(function (zipFileBlob) {
+        const zipFileUrl = URL.createObjectURL(zipFileBlob);
+        downloadLink.setAttribute("href", zipFileUrl);
+    })
+}
+
+</script>
+</body>
+
+</html>
