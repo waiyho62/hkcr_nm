@@ -37,7 +37,6 @@ keywordsByTopic['1'] = [
 "Febrile seizure",
 "Frontotemporal dementia",
 "Luxury perfusion",
-"Parkinson's disease",
 "Parkinsonism",
 "Parkinson's disease",
 "Progressive supranuclear palsy",
