@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>REPORTING QUESTION TEMPLATE</title>
+
+<style>
+div {
+  height: 320px;
+  width: 860px;
+}
+#box img {
+    width: 90%;
+    height: 90%;
+    object-fit: contain;
+}
+</style>
+</head>
+<body style="background-color:#ece6ff;">
+
+<ul style="font-size:120%">
+<li><a href="./Index.html">Index Page</a></li>
+<li><a href="./First_NM_Physics.html">First NM Examination - Physics Paper</a></li>
+<li><a href="./First_NM_Clinical.html">First NM Examination - Clinical Paper</a></li>
+<li><a href="./Final_NM.html">Final NM Examination</a></li>
+</ul>
+
+<h2 style="font-size:200%;"> REPORTING QUESTION TEMPLATE</h2>
+<form action="javascript:SaveQuestion();">
+<label for="authorList">Author List:</label>
+<select id="authorList" onchange="SelectAuthor()"></select>
+
+<label for="enterAuthor">Enter Author:</label>
+<input type="text" id="enterAuthor" name="enterAuthor" size="20" required>
+<br><br>
+
+<label for="question">Question</label>
+<input type="number" id="questionNumber" name="questionNumber" value=1 disabled>
+<label for="clinicalHistory">Clinical history:</label>
+<br>
+<textarea id="clinicalHistory" name="clinicalHistory" rows="7" cols="114" maxlength="800"onfocusout="RemoveSemicolonBreak('clinicalHistory')" required>
+</textarea><br><br>
+
+<div id="box" name="box">
+<label for="myFile">Add film1:</label>
+    <input id="file-upload" type="file" />
+    <input type="text" id="imageUrl" name="imageUrl" disabled>
+    <button type="button" onclick="NewTab()">
+        Open full size film1
+    </button>
+    <button type="button" onclick="RemoveFilm1()">Remove film1</button>
+    <img id="image-display">
+</div>
+
+<div id="box" name="box2">
+<label for="myFile2">Add film2:</label>
+    <input id="file-upload2" type="file" />
+    <input type="text" id="imageUrl2" name="imageUrl2" disabled>
+    <button type="button" onclick="NewTab2()">
+        Open full size film2
+    </button>
+    <button type="button" onclick="RemoveFilm2()">Remove film2</button>
+    <img id="image-display2">
+</div>
+
+<div id="box" name="box3">
+<label for="myFile3">Add film3:</label>
+    <input id="file-upload3" type="file" />
+    <input type="text" id="imageUrl3" name="imageUrl3" disabled>
+    <button type="button" onclick="NewTab3()">
+        Open full size film3
+    </button>
+    <button type="button" onclick="RemoveFilm3()">Remove film3</button>
+    <img id="image-display3">
+</div>
+
+<div id="box" name="box4">
+<label for="myFile4">Add film4:</label>
+    <input id="file-upload4" type="file" />
+    <input type="text" id="imageUrl4" name="imageUrl4" disabled>
+    <button type="button" onclick="NewTab4()">
+        Open full size film4
+    </button>
+    <button type="button" onclick="RemoveFilm4()">Remove film4</button>
+    <img id="image-display4">
+</div>
+<br>
+
+<label for="questionA">Question A:</label>
+<TEXTAREA id="questionA" name="questionA" rows="2" cols="102" onfocusout="SetQuestionA('questionA')" required>
+</TEXTAREA>
+<br><br>
+<label for="answerA">Answer A:</label>
+<TEXTAREA id="answerA" name="answerA" rows="2" cols="103" onfocusout="RemoveSemicolonBreak('answerA')" required disabled>
+</TEXTAREA>
+<br><br>
+
+<label for="questionB">Question B:</label>
+<TEXTAREA id="questionB" name="questionB" rows="2" cols="102" onfocusout="SetQuestionB('questionB')" required>
+</TEXTAREA>
+<br><br>
+<label for="answerB">Answer B:</label>
+<TEXTAREA id="answerB" name="answerB" rows="2" cols="103" onfocusout="RemoveSemicolonBreak('answerB')" required disabled>
+</TEXTAREA>
+<br><br>
+
+<label for="questionC">Question C:</label>
+<TEXTAREA id="questionC" name="questionC" rows="2" cols="102" onfocusout="SetQuestionC('questionC')" disabled>
+</TEXTAREA>
+<br><br>
+<label for="answerC">Answer C:</label>
+<TEXTAREA id="answerC" name="answerC" rows="2" cols="103" onfocusout="RemoveSemicolonBreak('answerC')" disabled>
+</TEXTAREA>
+<br><br>
+
+<label for="questionD">Question D:</label>
+<TEXTAREA id="questionD" name="questionD" rows="2" cols="102" onfocusout="SetQuestionD('questionD')" disabled>
+</TEXTAREA>
+<br><br>
+<label for="answerD">Answer D:</label>
+<TEXTAREA id="answerD" name="answerD" rows="2" cols="103" onfocusout="RemoveSemicolonBreak('answerD')" disabled>
+</TEXTAREA>
+<br><br>
+
+<label for="questionE">Question E:</label>
+<TEXTAREA id="questionE" name="questionE" rows="2" cols="102" onfocusout="SetQuestionE('questionE')" disabled>
+</TEXTAREA>
+<br><br>
+<label for="answerE">Answer E:</label>
+<TEXTAREA id="answerE" name="answerE" rows="2" cols="103" onfocusout="RemoveSemicolonBreak('answerE')" disabled>
+</TEXTAREA>
+<br><br>
+
+<label for="modality1">Modality 1:</label>
+<select id="modality1" name="modality1">
+  <option value="1" selected>NM</option> 
+  <option value="2">PET</option> 
+  <option value="3">X-ray</option>
+  <option value="4">CT</option>
+  <option value="5">MR</option>
+  <option value="6">Lab test</option>
+  <option value="7">ECG</option>
+  <option value="8">Other</option>
+</select>
+
+<label for="modality2">Modality 2:</label>
+<select id="modality2" name="modality2">
+  <option value="1" selected>NM</option> 
+  <option value="2">PET</option> 
+  <option value="3">X-ray</option>
+  <option value="4">CT</option>
+  <option value="5">MR</option>
+  <option value="6">Lab test</option>
+  <option value="7">ECG</option>
+  <option value="8">Other</option>
+</select>
+
+<br><br>
+
+<label for="topic">Topic List:</label>
+<select id="topic" name="topic" onchange="ChangeKeywordList()"> 
+  <option value="">-- Topic --</option> 
+  <option value="1">Neurology</option> 
+  <option value="2">Cardiology</option> 
+  <option value="3">Endocrinology</option>
+  <option value="4">GI & Hepatobiliary</option>
+  <option value="5">Renal</option>
+  <option value="6">Haematology & Laboratory</option>
+  <option value="7">Infection</option>
+  <option value="8">Oncology</option>
+  <option value="9">Pulmonary</option>
+  <option value="10">Skeletal</option>
+  <option value="11">Paediatric</option>
+  <option value="12">Radionuclide therapy</option>
+  <option value="13">PET/CT</option>
+  <option value="14">Miscellaneous</option>
+</select> 
+
+<label for="topicId">Topic ID:</label>
+<input type="text" id="topicId" name="topicId" size="2" disabled required>
+
+<label for="enterKeyword">Enter Keyword:</label>
+<input type="text" id="enterKeyword" name="enterKeyword" size="30" onfocusout="RemoveSemicolonComma('enterKeyword')" required>
+<br><br>
+<button type="submit">Save Question</button>
+<button type="button" id="prepare-button">Prepare Zip File</button>
+<a id="download-link" download="ToHKCR">Download Zip File</a>
+<button type="button" onclick="ResetForm()">Reset to Question 1</button>
+</form>
+
+<br>
+<label for="savedQuestions">Saved Questions</label>
+<br>
+<textarea id="savedQuestions" 
+		  name="savedQuestion" 
+          rows="10" cols="114" 
+          disabled>TopicID;Author;ClinicalHistory;Modality1;Modality2;Film1;Film2;Film3;Film4;QuestionA;QuestionB;QuestionC;QuestionD;QuestionE;AnswerA;AnswerB;AnswerC;AnswerD;AnswerE;Keyword</textarea><br><br>
+
+
+<script src="./Reporting.js"></script>
+<script src="./jszip.min.js"></script>
+
+<script>
+
+const downloadLink = document.querySelector("#download-link");
+const prepareButton = document.querySelector("#prepare-button");
+const savedImages = [];
+
+function SelectAuthor() {
+  var e = document.getElementById("authorList");
+  var selectedKeyword = e.options[e.selectedIndex].text;
+  enterAuthor.value = selectedKeyword;
+}
+
+function ChangeKeywordList() {
+  var e = document.getElementById("topic");
+  var selectedTopicId = e.options[e.selectedIndex].value;
+  topicId.value = selectedTopicId;
+}
+
+var select = document.getElementById("authorList");
+for (var i = 0; i < authors.length; i++) {
+	var optn = authors[i];
+    var el = document.createElement("option");
+	el.textContent = optn;
+    el.value = optn;
+	select.appendChild(el);
+	};
+    var e = document.getElementById("authorList");
+    enterAuthor.value = e.options[0].text;
+
+let storedImage = null
+let storedImageUrl = null
+let storedImage2 = null
+let storedImageUrl2 = null
+let storedImage3 = null
+let storedImageUrl3 = null
+let storedImage4 = null
+let storedImageUrl4 = null
+
+const imageDisplay = document.querySelector("#image-display")
+const fileUpload = document.querySelector("#file-upload")
+const imageDisplay2 = document.querySelector("#image-display2")
+const fileUpload2 = document.querySelector("#file-upload2")
+const imageDisplay3 = document.querySelector("#image-display3")
+const fileUpload3 = document.querySelector("#file-upload3")
+const imageDisplay4 = document.querySelector("#image-display4")
+const fileUpload4 = document.querySelector("#file-upload4")
+
+fileUpload.onchange = function () {
+    storedImage = fileUpload.files[0];
+    storedImageUrl = URL.createObjectURL(storedImage);
+    imageUrl.value = storedImageUrl;
+    imageDisplay.setAttribute("src", storedImageUrl);
+}
+
+fileUpload2.onchange = function () {
+    storedImage2 = fileUpload2.files[0];
+    storedImageUrl2 = URL.createObjectURL(storedImage2);
+    imageUrl2.value = storedImageUrl2;
+    imageDisplay2.setAttribute("src", storedImageUrl2);
+}
+
+fileUpload3.onchange = function () {
+    storedImage3 = fileUpload3.files[0];
+    storedImageUrl3 = URL.createObjectURL(storedImage3);
+    imageUrl3.value = storedImageUrl3;
+    imageDisplay3.setAttribute("src", storedImageUrl3);
+}
+
+fileUpload4.onchange = function () {
+    storedImage4 = fileUpload4.files[0];
+    storedImageUrl4 = URL.createObjectURL(storedImage4);
+    imageUrl4.value = storedImageUrl4;
+    imageDisplay4.setAttribute("src", storedImageUrl4);
+}
+
+function RemoveFilm1() {
+    storedImage = null;
+    imageUrl.value = null;
+    imageDisplay.setAttribute("src", null);
+}
+
+function RemoveFilm2() {
+    storedImage2 = null;
+    imageUrl2.value = null;
+    imageDisplay2.setAttribute("src", null);
+}
+
+function RemoveFilm3() {
+    storedImages = null;
+    imageUrl3.value = null;
+    imageDisplay3.setAttribute("src", null);
+}
+
+function RemoveFilm4() {
+    storedImage4 = null;
+    imageUrl4.value = null;
+    imageDisplay4.setAttribute("src", null);
+}
+
+function NewTab() {
+  window.open(storedImageUrl, "_blank");
+}
+
+function NewTab2() {
+  window.open(storedImageUrl2, "_blank");
+}
+
+function NewTab3() {
+  window.open(storedImageUrl3, "_blank");
+}
+
+function NewTab4() {
+  window.open(storedImageUrl4, "_blank");
+}
+
+function RemoveSemicolonBreak(fieldId) {
+  var x = document.getElementById(fieldId);
+  x.value = x.value.replace(/\;/g, ",");
+  x.value = x.value.replace(/[\r\n]/g, " ")
+}
+
+function RemoveSemicolon(fieldId) {
+  var x = document.getElementById(fieldId);
+  x.value = x.value.replace(/\;/g, ",");
+}
+
+function RemoveSemicolonComma(fieldId) {
+  var x = document.getElementById(fieldId);
+  x.value = x.value.replace(/\;/g, "");
+  x.value = x.value.replace(/\,/g, "")
+}
+
+function SetQuestionA(fieldId) {
+  var x = document.getElementById(fieldId);
+  if (x.value) {
+    x.value = x.value.replace(/\;/g, ",");
+    x.value = x.value.replace(/[\r\n]/g, " ");
+    document.getElementById('answerA').removeAttribute('disabled');
+    document.getElementById('answerA').setAttribute('required', "")
+  }
+}
+
+function SetQuestionB(fieldId) {
+  var x = document.getElementById(fieldId);
+  if (x.value) {
+    x.value = x.value.replace(/\;/g, ",");
+    x.value = x.value.replace(/[\r\n]/g, " ");
+    document.getElementById('questionC').removeAttribute('disabled');
+    document.getElementById('answerB').removeAttribute('disabled');
+    document.getElementById('answerB').setAttribute('required', "")
+  }
+}
+
+function SetQuestionC(fieldId) {
+  var x = document.getElementById(fieldId);
+  if (x.value) {
+    x.value = x.value.replace(/\;/g, ",");
+    x.value = x.value.replace(/[\r\n]/g, " ");
+    document.getElementById('questionD').removeAttribute('disabled');
+    document.getElementById('answerC').removeAttribute('disabled');
+    document.getElementById('answerC').setAttribute('required', ""); } else {
+    document.getElementById('questionD').setAttribute('disabled', "");
+    document.getElementById('questionE').setAttribute('disabled', "");
+    document.getElementById('answerC').setAttribute('disabled', "");
+    document.getElementById('answerD').setAttribute('disabled', "");
+    document.getElementById('answerE').setAttribute('disabled', "");
+    document.getElementById('answerC').removeAttribute('required');
+    document.getElementById('answerD').removeAttribute('required');
+    document.getElementById('answerE').removeAttribute('required');
+    document.getElementById('answerC').value = "";
+    document.getElementById('questionD').value = "";
+    document.getElementById('answerD').value = "";
+    document.getElementById('questionE').value = "";
+    document.getElementById('answerE').value = ""
+  }
+}
+
+function SetQuestionD(fieldId) {
+  var x = document.getElementById(fieldId);
+  if (x.value) {
+    x.value = x.value.replace(/\;/g, ",");
+    x.value = x.value.replace(/[\r\n]/g, " ");
+    document.getElementById('questionE').removeAttribute('disabled');
+    document.getElementById('answerD').removeAttribute('disabled');
+    document.getElementById('answerD').setAttribute('required',  ""); } else {
+    document.getElementById('questionE').setAttribute('disabled', "");
+    document.getElementById('answerD').setAttribute('disabled', "");
+    document.getElementById('answerE').setAttribute('disabled', "");
+    document.getElementById('answerD').removeAttribute('required');
+    document.getElementById('answerE').removeAttribute('required');
+    document.getElementById('answerD').value = "";
+    document.getElementById('questionE').value = "";
+    document.getElementById('answerE').value = ""
+  }
+}
+
+function SetQuestionE(fieldId) {
+  var x = document.getElementById(fieldId);
+  if (x.value) {
+    x.value = x.value.replace(/\;/g, ",");
+    x.value = x.value.replace(/[\r\n]/g, " ");
+    document.getElementById('answerE').removeAttribute('disabled');
+    document.getElementById('answerE').setAttribute('required', ""); } else {
+    document.getElementById('answerE').setAttribute('disabled', "");
+    document.getElementById('answerE').removeAttribute('required');
+    document.getElementById('answerE').value = ""
+  }
+}
+
+
+function SaveQuestion(){
+  if (topicId.value) {
+  let savedImageName = ""
+  if (storedImage) { 
+    savedImageName = enterAuthor.value + "_Question" + questionNumber.value + "_Film1" + ".jpg";
+    savedImages.push([savedImageName,storedImage])
+  }
+  let savedImageName2 = ""
+  if (storedImage2) { 
+    savedImageName2 = enterAuthor.value + "_Question" + questionNumber.value + "_Film2" + ".jpg";
+    savedImages.push([savedImageName2,storedImage2])
+  }
+  let savedImageName3 = ""
+  if (storedImage3) { 
+    savedImageName3 = enterAuthor.value + "_Question" + questionNumber.value + "_Film3" + ".jpg";
+    savedImages.push([savedImageName3,storedImage3])
+  }
+  let savedImageName4 = ""
+  if (storedImage4) { 
+    savedImageName4 = enterAuthor.value + "_Question" + questionNumber.value + "_Film4" + ".jpg";
+    savedImages.push([savedImageName4,storedImage4])
+  }
+
+  savedQuestions.value += '\r\n';
+  savedQuestions.value += topicId.value + ";";
+  savedQuestions.value += enterAuthor.value + ";";
+  savedQuestions.value += clinicalHistory.value + ";";
+  savedQuestions.value += modality1.value + ";";
+  savedQuestions.value += modality2.value + ";";
+  savedQuestions.value += savedImageName + ";";
+  savedQuestions.value += savedImageName2 + ";";
+  savedQuestions.value += savedImageName3 + ";";
+  savedQuestions.value += savedImageName4 + ";";
+  savedQuestions.value += "a. " + questionA.value + ";";
+  savedQuestions.value += "b. " + questionB.value + ";";
+  savedQuestions.value += "c. " + questionC.value + ";";
+  savedQuestions.value += "d. " + questionD.value + ";";
+  savedQuestions.value += "e. " + questionE.value + ";";
+  savedQuestions.value += "a. " + answerA.value + ";";
+  savedQuestions.value += "b. " + answerB.value + ";";
+  savedQuestions.value += "c. " + answerC.value + ";";
+  savedQuestions.value += "d. " + answerD.value + ";";
+  savedQuestions.value += "e. " + answerE.value + ";";
+  savedQuestions.value += enterKeyword.value;
+
+  var x = Number(questionNumber.value) + 1;
+  questionNumber.value = x;} else {
+  alert("Select topic!")
+  }
+}
+
+prepareButton.onclick = function () {
+    
+    const zipFile = new JSZip();
+    
+  for (var i = 0; i < savedImages.length; i++) {
+    if (savedImages[i][1]) {zipFile.folder("Images").file(savedImages[i][0], savedImages[i][1])};
+  }  
+
+    zipFile.file("Reporting_Questions.txt", savedQuestions.value);
+
+    zipFile.generateAsync({ type: "blob" }).then(function (zipFileBlob) {
+        const zipFileUrl = URL.createObjectURL(zipFileBlob);
+        downloadLink.setAttribute("href", zipFileUrl);
+    })
+}
+
+function ResetForm(){
+savedQuestions.value = 'Question;Figure;ChoiceA;ChoiceB;ChoiceC;ChoiceD;ChoiceE;Answer;TopicID;Keyword;Author;ReferenceScore';
+questionNumber.value = '1'
+}
+
+</script>
+</body>
+
+</html>
