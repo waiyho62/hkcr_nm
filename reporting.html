@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>REPORTING QUESTION TEMPLATE</title>
+    <title>REPORTING SESSION QUESTION TEMPLATE</title>
 
 <style>
 div {
@@ -28,7 +28,7 @@ div {
 <li><a href="./Final_NM.html">Final NM Examination</a></li>
 </ul>
 
-<h2 style="font-size:200%;"> REPORTING QUESTION TEMPLATE</h2>
+<h2 style="font-size:200%;"> REPORTING SESSION QUESTION TEMPLATE</h2>
 <form action="javascript:SaveQuestion();">
 <label for="authorList">Author List:</label>
 <select id="authorList" onchange="SelectAuthor()"></select>
@@ -158,6 +158,8 @@ div {
   <option value="8">Other</option>
 </select>
 
+(For single modality, same entry for both)
+
 <br><br>
 
 <label for="topic">Topic List:</label>
@@ -185,7 +187,7 @@ div {
 <label for="enterKeyword">Enter Keyword:</label>
 <input type="text" id="enterKeyword" name="enterKeyword" size="30" onfocusout="RemoveSemicolonComma('enterKeyword')" required>
 <br><br>
-<button type="submit">Save Question</button>
+<button type="submit" id="submit">Save Question</button>
 <button type="button" id="prepare-button">Prepare Zip File</button>
 <a id="download-link" download="ToHKCR">Download Zip File</a>
 <button type="button" onclick="ResetForm()">Reset to Question 1</button>
@@ -200,7 +202,7 @@ div {
           disabled>TopicID;Author;ClinicalHistory;Modality1;Modality2;Film1;Film2;Film3;Film4;QuestionA;QuestionB;QuestionC;QuestionD;QuestionE;AnswerA;AnswerB;AnswerC;AnswerD;AnswerE;Keyword</textarea><br><br>
 
 
-<script src="./Reporting.js"></script>
+<script src="./Final.js"></script>
 <script src="./jszip.min.js"></script>
 
 <script>
@@ -417,24 +419,45 @@ function SaveQuestion(){
   if (topicId.value) {
   let savedImageName = ""
   if (storedImage) { 
-    savedImageName = enterAuthor.value + "_Question" + questionNumber.value + "_Film1" + ".jpg";
+    savedImageName = enterAuthor.value + "_Reporting_Question" + questionNumber.value + "_Film1" + ".jpg";
     savedImages.push([savedImageName,storedImage])
   }
   let savedImageName2 = ""
   if (storedImage2) { 
-    savedImageName2 = enterAuthor.value + "_Question" + questionNumber.value + "_Film2" + ".jpg";
+    savedImageName2 = enterAuthor.value + "_Reporting_Question" + questionNumber.value + "_Film2" + ".jpg";
     savedImages.push([savedImageName2,storedImage2])
   }
   let savedImageName3 = ""
   if (storedImage3) { 
-    savedImageName3 = enterAuthor.value + "_Question" + questionNumber.value + "_Film3" + ".jpg";
+    savedImageName3 = enterAuthor.value + "_Reporting_Question" + questionNumber.value + "_Film3" + ".jpg";
     savedImages.push([savedImageName3,storedImage3])
   }
   let savedImageName4 = ""
   if (storedImage4) { 
-    savedImageName4 = enterAuthor.value + "_Question" + questionNumber.value + "_Film4" + ".jpg";
+    savedImageName4 = enterAuthor.value + "_Reporting_Question" + questionNumber.value + "_Film4" + ".jpg";
     savedImages.push([savedImageName4,storedImage4])
   }
+
+  let theQuestionC = questionC.value;
+  let theAnswerC = answerC.value;
+  if (theQuestionC) {
+    theQuestionC = "c. " +  questionC.value;
+    theAnswerC = "c. " +  answerC.value;
+  } 
+  
+  let theQuestionD = questionD.value;
+  let theAnswerD = answerD.value;
+  if (theQuestionD) {
+    theQuestionD = "d. " +  questionD.value;
+    theAnswerD = "d. " +  answerD.value;
+  } 
+
+  let theQuestionE = questionE.value;
+  let theAnswerE = answerE.value;
+  if (theQuestionE) {
+    theQuestionE = "e. " +  questionE.value;
+    theAnswerE = "e. " +  answerE.value;
+  } 
 
   savedQuestions.value += '\r\n';
   savedQuestions.value += topicId.value + ";";
@@ -448,14 +471,14 @@ function SaveQuestion(){
   savedQuestions.value += savedImageName4 + ";";
   savedQuestions.value += "a. " + questionA.value + ";";
   savedQuestions.value += "b. " + questionB.value + ";";
-  savedQuestions.value += "c. " + questionC.value + ";";
-  savedQuestions.value += "d. " + questionD.value + ";";
-  savedQuestions.value += "e. " + questionE.value + ";";
+  savedQuestions.value += theQuestionC + ";";
+  savedQuestions.value += theQuestionD + ";";
+  savedQuestions.value += theQuestionE + ";";
   savedQuestions.value += "a. " + answerA.value + ";";
   savedQuestions.value += "b. " + answerB.value + ";";
-  savedQuestions.value += "c. " + answerC.value + ";";
-  savedQuestions.value += "d. " + answerD.value + ";";
-  savedQuestions.value += "e. " + answerE.value + ";";
+  savedQuestions.value += theAnswerC + ";";
+  savedQuestions.value += theAnswerD + ";";
+  savedQuestions.value += theAnswerE + ";";
   savedQuestions.value += enterKeyword.value;
 
   var x = Number(questionNumber.value) + 1;
@@ -465,7 +488,9 @@ function SaveQuestion(){
 }
 
 prepareButton.onclick = function () {
-    
+   
+  document.getElementById('submit').setAttribute('disabled', "");
+ 
     const zipFile = new JSZip();
     
   for (var i = 0; i < savedImages.length; i++) {
@@ -481,8 +506,7 @@ prepareButton.onclick = function () {
 }
 
 function ResetForm(){
-savedQuestions.value = 'Question;Figure;ChoiceA;ChoiceB;ChoiceC;ChoiceD;ChoiceE;Answer;TopicID;Keyword;Author;ReferenceScore';
-questionNumber.value = '1'
+location.reload()
 }
 
 </script>
