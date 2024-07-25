@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FIRST MCQ MARKING</title>
+</head>
+
+<body style="background-color:#ece6ff;">
+
+    <h2 style="font-size:200%;"> FIRST MCQ MARKING</h2>
+    <form action="javascript:markPages();">
+
+        <label for="myAnswerFile" id="label">Select "PartI(Clinical/Physics)_Answers.txt":</label>
+        <input id="myAnswerFile" type="file" accept=".txt" 
+            onchange="showText('myAnswerFile', 'myTextArea')">
+        <textarea id="myTextArea" cols="20" rows="1" disabled required></textarea>
+        <br><br>
+
+        <label for="myLocationFile" id="label">[Optional] Select "First_Question_No_Loc.txt":</label>
+        <input id="myLocationFile" type="file" accept=".txt" 
+            onchange="showText2('myLocationFile', 'myTextArea2')" disabled>
+        <textarea id="myTextArea2" cols="18" rows="1" disabled required></textarea>
+        <br><br>
+
+        <label for="myFile">Select Page 1 Answer Sheet:</label>
+        <input id="file-upload" type="file" />
+        <input type="text" id="imageUrl" name="imageUrl" disabled required>
+        <button type="button" onclick="newTab()">
+            Open Page 1
+        </button>
+        <br><br>
+
+        <label for="myFile2">Select Page 2 Answer Sheet:</label>
+        <input id="file-upload2" type="file" />
+        <input type="text" id="imageUrl2" name="imageUrl2" disabled required>
+        <button type="button" onclick="newTab2()">
+            Open Page 2
+        </button>
+        <br><br>
+
+        <label for="myFile2">Select Page 3 Answer Sheet:</label>
+        <input id="file-upload3" type="file" />
+        <input type="text" id="imageUrl3" name="imageUrl3" disabled required>
+        <button type="button" onclick="newTab3()">
+            Open Page 3
+        </button>
+        <br><br>
+
+        <button type="submit" id="submit">Mark Paper</button>
+        <label>Page 1 Marks:</label>
+        <input type="text" id="pageOneMarks" name="pageOneMarks" size="11" disabled>
+        <label>Page 2 Marks:</label>
+        <input type="text" id="pageTwoMarks" name="pageTwoMarks" size="11" disabled>
+        <label>Page 3 Marks:</label>
+        <input type="text" id="pageThreeMarks" name="pageThreeMarks" size="11" disabled>
+        <br><br>
+        
+        <button type="button" id="saveResults" onclick="addScores()" disabled>
+            Save Results to Score File</button>
+        <button type="button" id="prepare-button">Prepare Zip File</button>
+        <a id="download-link" download="Final_MCQ_Marking">Download Zip File</a>
+        <button type="button" id="reset" onclick="resetPage()">Reset Page</button>
+
+    </form>
+
+    <canvas id="theCanvas" width="967" height="5" style="display: none"></canvas>
+    <br>
+    <label for="scoreFile">Score File</label>
+    <input type="text" id="fileName" name="FileName" size="22" disabled>
+    <br><br>
+    <textarea id="scoreFile" name="scoreFile" rows="10" cols="96" disabled></textarea>
+    <br><br>
+
+    <script src="./jszip.min.js"></script>
+    <script src="./first_default_Loc.js"></script>
+
+    <script>
+
+const downloadLink = document.querySelector("#download-link");
+const prepareButton = document.querySelector("#prepare-button");
+const savedImages = [];
+let candidateNumber = 1;
+
+const question_Loc = [];
+const answers = [];
+const page1ScoreList = [];
+const page2ScoreList = [];
+const page3ScoreList = [];
+const partIScores = [];
+
+let storedImageUrl;
+let storedImageUrl2;
+let storedImageUrl3;
+
+const fileUpload = document.querySelector("#file-upload");
+const fileUpload2 = document.querySelector("#file-upload2");
+const fileUpload3 = document.querySelector("#file-upload3");
+
+let imageWidth = 0;
+let imageHeight = 0;
+let imageWidth2 = 0;
+let imageHeight2 = 0;
+let imageWidth3 = 0;
+let imageHeight3 = 0;
+
+let scoreFileName = "PartI_Clinical_Score.txt" ;
+
+function appendImageToDocument(blob) {
+    const el = document.createElement("img")
+    el.src = URL.createObjectURL(blob)
+
+    document.body.appendChild(el)
+}
+
+function getImageDimension(file, nextFunction) { // the 'nextFunction' is actually the function 'afterImageDimensionIsLoaded'
+    const url = URL.createObjectURL(file);
+    const elem = document.createElement("img");
+    elem.src = url;
+    elem.onload = () => {
+        let w = elem.width
+        let h = elem.height
+        nextFunction({ width: w, height: h })
+    }
+    // return would not work here because the image is not loaded yet
+}
+
+fileUpload.onchange = (e) => {
+    let storedImage = fileUpload.files[0]
+    
+    function afterImageDimensionIsLoaded(a) {
+        // rearranged the statement in a callback function
+        imageWidth = a.width;
+        imageHeight = a.height;
+        storedImageUrl = URL.createObjectURL(storedImage);
+        imageUrl.value = storedImageUrl;
+    }
+    getImageDimension(storedImage, afterImageDimensionIsLoaded);
+}
+
+fileUpload2.onchange = (e) => {
+    let storedImage = fileUpload2.files[0]
+
+    function afterImageDimensionIsLoaded(b) {
+        // rearranged the statement in a callback function
+        imageWidth2 = b.width;
+        imageHeight2 = b.height;
+        storedImageUrl2 = URL.createObjectURL(storedImage);
+        imageUrl2.value = storedImageUrl2;
+    }
+    getImageDimension(storedImage, afterImageDimensionIsLoaded);
+}
+
+fileUpload3.onchange = (e) => {
+    let storedImage = fileUpload3.files[0]
+
+    function afterImageDimensionIsLoaded(c) {
+        // rearranged the statement in a callback function
+        imageWidth3 = c.width;
+        imageHeight3 = c.height;
+        storedImageUrl3 = URL.createObjectURL(storedImage);
+        imageUrl3.value = storedImageUrl3;
+    }
+    getImageDimension(storedImage, afterImageDimensionIsLoaded);
+}
+
+function showText(fileId, areaId) {
+    let file = document.getElementById(fileId).files[0];
+    let f = file.name;
+    getScoreFileName(f);
+    let reader = new FileReader();
+    reader.onload = function (e) {
+        let textArea = document.getElementById(areaId);
+        textArea.value = e.target.result;
+        myTextArea2.value = default_Loc;
+        loadList(answers, "myTextArea", 2);
+        createScoreList("myTextArea", partIScores);
+        scoreFile.value = displayScoreList(partIScores);
+        myLocationFile.removeAttribute("disabled");
+        
+    };
+    reader.readAsText(file);
+}
+
+function showText2(fileId, areaId) {
+    let file = document.getElementById(fileId).files[0];
+    let reader = new FileReader();
+    reader.onload = function (e) {
+        let textArea = document.getElementById(areaId);
+        textArea.value = e.target.result;
+    };
+    reader.readAsText(file);
+}
+
+function loadList(list, textArea, itemNo) {
+    list.splice(0, list.length);
+    let string = document.getElementById(textArea).value;
+    let array = string.split("\n");
+    for (let i = 0; i < array.length - 1; i++) {
+        if (itemNo == 0) {
+            list.push(array[i]);
+        } else {
+            let strar = array[i].split(";");
+            list.push(strar[itemNo - 1]);
+        };
+    };
+}
+
+function createScoreList(textArea, scoreList) {
+    scoreList.splice(0, scoreList.length);
+    let string = document.getElementById(textArea).value;
+    let array = string.split("\n");
+    for (let i = 0; i < array.length; i++) {
+        scoreList.push(array[i] + ";0");
+    };
+}
+
+function displayScoreList(list) {
+    let string = "";
+    for (let i = 0; i < list.length - 1; i++) {
+        string += (list[i] + "\n");
+    };
+    return string;
+}
+
+function newTab() {
+    window.open(storedImageUrl, "_blank");
+}
+
+function newTab2() {
+    window.open(storedImageUrl2, "_blank");
+}
+
+function newTab3() {
+    window.open(storedImageUrl3, "_blank");
+}
+
+function findAverage(arr) {
+    let sum = 0;
+    for (let i = 0; i < arr.length; i++) {
+        sum += arr[i];
+    }
+    return sum / arr.length;
+}
+
+function markPages() {
+    if (myTextArea.value == "") {
+        alert("Please select answer file!");
+    } else if (imageUrl.value == "") {
+        alert("Please select page 1 answer sheet!");
+    } else if (imageUrl2.value == "") {
+        alert("Please select page 2 answer sheet!");
+    } else if (imageUrl3.value == "") {
+        alert("Please select page 3 answer sheet!");
+    } else {
+        loadList(question_Loc, "myTextArea2", 0);
+        let z = markAPage(storedImageUrl, imageHeight, imageWidth, 1);
+        let y = markAPage(storedImageUrl2, imageHeight2, imageWidth2, 2);
+        let x = markAPage(storedImageUrl3, imageHeight3, imageWidth3, 3);
+        document.getElementById("saveResults").disabled = false;
+        //getScoreFileName();
+    };
+}
+
+function getScoreFileName(f) {
+    if (f.includes("Physics")) {
+        scoreFileName = "PartI_Physics_Score.txt";
+        fileName.value = scoreFileName;
+    };
+    if (f.includes("Clinical")) {
+        scoreFileName = "PartI_Clinical_Score.txt";
+        fileName.value = scoreFileName;
+    };
+}
+
+
+
+function markAPage(myImageUrl, myImageHeight, myImageWidth, pageNo) {
+
+    const myCanvas = new OffscreenCanvas(myImageWidth, myImageHeight);
+    const ctx = myCanvas.getContext("2d");
+    let img = new Image;
+    let pageScore = 0;
+    const pageScoreLoc = [700, 150];
+
+    const refPoint1 = [119, 761];
+    const refPoint2 = [795, 761];
+    const newRefPoint = [0, 0];
+    const newRefPoint1 = [0, 0];
+    const newRefPoint2 = [0, 0];
+
+    const calPoint = [468, 286];
+    const rectHeight = 11;
+    const circleSpacing = 19;
+    const optionSpacing = 40;
+    const origin = [0, 0];
+    
+    let translated_x = 0;
+    let translated_y = 0;
+    let rgbValue = 0;
+    
+    //Reset page score list
+    page1ScoreList.splice(0, page1ScoreList.length);
+    page2ScoreList.splice(0, page2ScoreList.length);
+    page3ScoreList.splice(0, page3ScoreList.length);
+
+
+    img.onload = function () {
+
+        function redDot(xstart) {
+            const X_List = [];
+            const Y_List = [];
+            for (let x = xstart; x < Math.round(myImageHeight / 6) + xstart; x++) {
+                for (let y = Math.round(myImageHeight / 2); y < Math.round(myImageHeight / 2) +
+                    Math.round(myImageHeight / 6); y++) {
+                    const pixel = ctx.getImageData(x, y, 1, 1);
+                    const r = pixel.data[0];
+                    const g = pixel.data[1];
+                    const b = pixel.data[2];
+                    if (r > 165 && g < 130 && b < 130) {
+                        X_List.push(x);
+                        Y_List.push(y);
+                    }
+                }
+            }
+            newRefPoint[0] = Math.round(findAverage(X_List));
+            newRefPoint[1] = Math.round(findAverage(Y_List));
+        };
+
+        function readRGB(xValue, yValue, rectHeight) {
+            const rgb_List = [];
+            let x_start = Math.round(xValue - rectHeight / 2);
+            let y_start = Math.round(yValue - rectHeight / 2);
+            for (let x = x_start; x < x_start + rectHeight; x++) {
+                for (let y = y_start; y < y_start + rectHeight; y++) {
+                    const pixel = ctx.getImageData(x, y, 1, 1);
+                    const r = pixel.data[0];
+                    const g = pixel.data[1];
+                    const b = pixel.data[2];
+                    rgb_List.push(Math.round((r + g + b) / 3));
+                }
+            }
+            rgbValue = Math.round(findAverage(rgb_List));
+        };
+
+        function circleChoice(x, y, radius) {
+            ctx.beginPath();
+            ctx.arc(x, y, radius, 0, 2 * Math.PI);
+            ctx.strokeStyle = "orange";
+            ctx.lineWidth = 3;
+            ctx.stroke();
+        };
+
+        function newPoint(x, y) {
+            translated_x = origin[0] + Math.round(Math.cos(Math.atan2(y, x) + angle)
+                * Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2)) * zoomFactor);
+            translated_y = origin[1] + Math.round(Math.sin(Math.atan2(y, x) + angle)
+                * Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2)) * zoomFactor);
+        };
+
+        function scoreOneQuestion(z) {
+
+            let strarLoc = question_Loc[z].split(";");
+            newPoint(strarLoc[0], strarLoc[1]);
+            let new_xx = translated_x;
+            let new_yy = translated_y;
+
+            let xLoc_A1 = (new_xx - newCircleSpacing * 2 - newOptionSpacing * 2);
+            let xLoc_A2 = (new_xx - newCircleSpacing - newOptionSpacing * 2);
+            let xLoc_B1 = (new_xx - newCircleSpacing - newOptionSpacing);
+            let xLoc_B2 = (new_xx - newOptionSpacing);
+            let xLoc_C1 = new_xx;
+            let xLoc_C2 = (new_xx + newCircleSpacing);
+            let xLoc_D1 = (new_xx + newCircleSpacing + newOptionSpacing);
+            let xLoc_D2 = (new_xx + newCircleSpacing * 2 + newOptionSpacing);
+            let xLoc_E1 = (new_xx + newCircleSpacing * 2 + newOptionSpacing * 2);
+            let xLoc_E2 = (new_xx + newCircleSpacing * 3 + newOptionSpacing * 2);
+
+            let scoreQuestion = [];
+            let scoreToAdd = 0;
+            let xLoc = [xLoc_A1, xLoc_A2, xLoc_B1, xLoc_B2, 
+                       xLoc_C1, xLoc_C2, xLoc_D1, xLoc_D2, xLoc_E1, xLoc_E2];
+            let theChoice = ["T", "F", "N"];
+
+            for (let i = 0; i < 5; i++) {
+                readRGB(xLoc[i*2], new_yy, newRectHeight);
+                let theValue1 = rgbValue;
+                readRGB(xLoc[i*2+1], new_yy, newRectHeight);
+                let theValue2 = rgbValue;
+
+                if (theValue1 < cutoff) {
+                    if (theValue2 >= cutoff) {
+                        scoreQuestion += theChoice[0];
+                    } else {
+                        scoreQuestion += theChoice[2];
+                    };
+                 } else {  
+                    if (theValue2 < cutoff) {
+                        scoreQuestion += theChoice[1];
+                    } else {
+                        scoreQuestion += theChoice[2];
+                    };
+                };
+            };
+                
+            for (let i = 0; i < 5; i++) {
+                if (answers[z].substring(i,i+1) == "T") {
+                    circleChoice(xLoc[i*2], new_yy, Math.round(newCircleSpacing / 2));
+                } else {
+                    circleChoice(xLoc[i*2+1], new_yy, Math.round(newCircleSpacing / 2));
+                };
+
+                if (answers[z].substring(i,i+1) == scoreQuestion.substring(i,i+1)) {
+                    scoreToAdd += 1;
+                };
+            };
+
+            if (scoreToAdd > 0) {
+                pageScore += scoreToAdd;
+                ctx.font = "30px Arial";
+                ctx.fillStyle = "red";
+                ctx.fillText(scoreToAdd, Math.round(xLoc[9] + newCircleSpacing * 3 / 4), new_yy);
+            };
+            
+
+            if (pageNo == 1) {
+                page1ScoreList.push(scoreToAdd);
+            };
+            if (pageNo == 2) {
+                page2ScoreList.push(scoreToAdd);
+            };
+            if (pageNo == 3) {
+                page3ScoreList.push(scoreToAdd);
+            };
+        };
+
+        ctx.drawImage(img, 0, 0);
+
+        redDot(0);
+        newRefPoint1[0] = newRefPoint[0];
+        newRefPoint1[1] = newRefPoint[1];
+
+        redDot(myImageWidth - Math.round(myImageHeight / 6));
+        newRefPoint2[0] = newRefPoint[0];
+        newRefPoint2[1] = newRefPoint[1];
+
+        let zoomFactor = Math.sqrt(Math.pow(newRefPoint2[0] - newRefPoint1[0], 2) +
+            Math.pow(newRefPoint2[1] - newRefPoint1[1], 2)) / (refPoint2[0] - refPoint1[0]);
+
+        let newRectHeight = Math.round(rectHeight * zoomFactor);
+
+        let newCircleSpacing = Math.round(circleSpacing * zoomFactor);
+
+        let newOptionSpacing = Math.round(optionSpacing * zoomFactor);
+
+        let angle = Math.atan2(newRefPoint2[1] - newRefPoint1[1], newRefPoint2[0] - newRefPoint1[0]);
+
+        origin[0] = newRefPoint1[0] - Math.round(Math.sin(Math.atan2(refPoint1[0], refPoint1[1]) - angle)
+            * Math.sqrt(Math.pow(refPoint1[1], 2) + Math.pow(refPoint1[0], 2)) * zoomFactor);
+
+        origin[1] = newRefPoint1[1] - Math.round(Math.cos(Math.atan2(refPoint1[0], refPoint1[1]) - angle)
+            * Math.sqrt(Math.pow(refPoint1[1], 2) + Math.pow(refPoint1[0], 2)) * zoomFactor);
+
+        newPoint(calPoint[0], calPoint[1]);
+        let new_x = translated_x;
+        let new_y = translated_y;
+    
+        readRGB(new_x, new_y, newRectHeight);
+        let blackValue = rgbValue;
+
+        circleChoice(new_x, new_y, Math.round(newCircleSpacing / 2));
+
+        readRGB(new_x + newCircleSpacing * 2, new_y, newRectHeight);
+        let whiteValue = rgbValue;
+
+        circleChoice(new_x + newCircleSpacing * 2, new_y, Math.round(newCircleSpacing / 2));
+
+        let cutoff = blackValue + Math.round((whiteValue - blackValue) * 170 / 255);
+        
+
+        if (pageNo == 1) {
+            for (let i = 0; i < 40; i++) {
+                scoreOneQuestion(i);
+            };
+        };
+
+        if (pageNo == 2) {
+            for (let i = 0; i < 40; i++) {
+                scoreOneQuestion(i + 40);
+            };
+        };
+
+        if (pageNo == 3) {
+            for (let i = 0; i < 20; i++) {
+                scoreOneQuestion(i + 80);
+            };
+        };
+
+
+        newPoint(pageScoreLoc[0], pageScoreLoc[1]);
+        let score_x = translated_x;
+        let score_y = translated_y;
+        ctx.font = "60px Arial";
+        ctx.fillStyle = "blue";
+        ctx.fillText(pageScore, score_x, score_y + newCircleSpacing);
+
+        document.getElementById('theCanvas').height = 1330;
+
+        const theCanvas = document.getElementById("theCanvas");
+        const ctx2 = theCanvas.getContext("2d");
+        let factor = Math.min(theCanvas.width / myCanvas.width, theCanvas.height / myCanvas.height);
+        ctx2.scale(factor, factor);
+        ctx2.drawImage(myCanvas, 0, 0);
+        ctx2.scale(1 / factor, 1 / factor);
+
+        if (pageNo == 1) {
+            pageOneMarks.value = pageScore;
+
+            theCanvas.toBlob(function (blob) {
+                // save the canvas content
+                savedImages.push({
+                    name: `candidate${candidateNumber}_page1_marked.png`,
+                    blob: blob
+                })
+
+                appendImageToDocument(blob)
+            });
+        };
+
+        if (pageNo == 2) {
+            pageTwoMarks.value = pageScore;
+
+            theCanvas.toBlob(function (blob) {
+
+                // save the canvas content
+                savedImages.push({
+                    name: `candidate${candidateNumber}_page2_marked.png`,
+                    blob: blob
+                })
+
+                appendImageToDocument(blob)
+            });
+        };
+
+        if (pageNo == 3) {
+            pageThreeMarks.value = pageScore;
+
+            theCanvas.toBlob(function (blob) {
+
+                // save the canvas content
+                savedImages.push({
+                    name: `candidate${candidateNumber}_page3_marked.png`,
+                    blob: blob
+                })
+
+                appendImageToDocument(blob)
+            });
+        };
+
+        document.getElementById('theCanvas').height = 5;
+    };
+    
+    img.src = myImageUrl;
+    return "1";
+}
+
+
+
+prepareButton.onclick = function () {
+
+    const zipFile = new JSZip();
+
+    const currDate = new Date();
+    const dateWithOffset = new Date(currDate.getTime() - currDate.getTimezoneOffset() * 60000);
+    // replace the default date with dateWithOffset
+    JSZip.defaults.date = dateWithOffset;
+
+    const imageDirectory = zipFile.folder("Marked_pages")
+    for (const it of savedImages) {
+        imageDirectory.file(it.name, it.blob)
+    }
+
+    zipFile.file(scoreFileName, scoreFile.value);
+
+    zipFile.generateAsync({ type: "blob" }).then(function (zipFileBlob) {
+        const zipFileUrl = URL.createObjectURL(zipFileBlob);
+        downloadLink.setAttribute("href", zipFileUrl);
+    })
+}
+
+function addScores() {
+
+    scoresToFile();
+    scoreFile.value = displayScoreList(partIScores);
+    document.getElementById("saveResults").disabled = true;
+    imageUrl.value = "";
+    imageUrl2.value = "";
+    imageUrl3.value = "";
+    pageOneMarks.value = "";
+    pageTwoMarks.value = "";
+    pageThreeMarks.value = "";
+    candidateNumber += 1;
+
+}
+
+function scoresToFile() {
+    let string = "";
+    for (let i = 0; i < 40; i++) {
+        let strar = partIScores[i].split(";");
+        let updatedScore = parseInt(strar[2]) + parseInt(page1ScoreList[i]);
+        partIScores[i] = strar[0] + ";" + strar[1] + ";" + updatedScore;
+    };
+    for (let i = 0; i < 40; i++) {
+        let strar = partIScores[i + 40].split(";");
+        let updatedScore = parseInt(strar[2]) + parseInt(page2ScoreList[i]);
+        partIScores[i + 40] = strar[0] + ";" + strar[1] + ";" + updatedScore;
+    };
+    for (let i = 0; i < 20; i++) {
+        let strar = partIScores[i + 80].split(";");
+        let updatedScore = parseInt(strar[2]) + parseInt(page3ScoreList[i]);
+        partIScores[i + 80] = strar[0] + ";" + strar[1] + ";" + updatedScore;
+    };
+
+}
+
+function resetPage() {
+    location.reload();
+}
+
+
+
+    </script>
+</body>
+
+</html>

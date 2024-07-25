@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FINAL MCQ MARKING</title>
+</head>
+
+<body style="background-color:#ece6ff;">
+
+    <h2 style="font-size:200%;"> FINAL MCQ MARKING</h2>
+    <form action="javascript:markPapers();">
+
+        <label for="myAnswerFile" id="label">Select "PartII_Answers.txt":</label>
+        <input id="myAnswerFile" type="file" accept=".txt" onchange="showText('myAnswerFile', 'myTextArea')">
+        <textarea id="myTextArea" cols="20" rows="1" disabled required></textarea>
+        <br><br>
+
+        <label for="myLocationFile" id="label">[Optional] Select "Question_No_Loc.txt":</label>
+        <input id="myLocationFile" type="file" accept=".txt" 
+            onchange="showText2('myLocationFile', 'myTextArea2')" disabled>
+        <textarea id="myTextArea2" cols="18" rows="1" disabled required></textarea>
+        <br><br>
+
+        <label for="myFile">Select Paper 1 Answer Sheet:</label>
+        <input id="file-upload" type="file" />
+        <input type="text" id="imageUrl" name="imageUrl" disabled required>
+        <button type="button" onclick="newTab()">
+            Open Paper 1
+        </button>
+        <br><br>
+
+        <label for="myFile2">Select Paper 2 Answer Sheet:</label>
+        <input id="file-upload2" type="file" />
+        <input type="text" id="imageUrl2" name="imageUrl2" disabled required>
+        <button type="button" onclick="newTab2()">
+            Open Paper 2
+        </button>
+        <br><br>
+
+        <button type="submit" id="submit">Mark Papers</button>
+        <label> Paper 1 Marks:</label>
+        <input type="text" id="paperOneMarks" name="paperOneMarks" size="11" disabled>
+        <label> Paper 2 Marks:</label>
+        <input type="text" id="paperTwoMarks" name="paperTwoMarks" size="11" disabled>
+        <button type="button" id="saveResults" onclick="addScores()" disabled>
+            Add Scores to Score File</button>
+        <br><br>
+
+        <button type="button" id="prepare-button">Prepare Zip File</button>
+        <a id="download-link" download="Final_MCQ_Marking">Download Zip File</a>
+        <button type="button" id="reset" onclick="resetPage()">Reset Page</button>
+
+    </form>
+
+    <canvas id="theCanvas" width="967" height="5" style="display: none"></canvas>
+    <br>
+    <label for="scoreFile: PartII_Score.txt">Score File</label>
+    <br><br>
+    <textarea id="scoreFile" name="scoreFile" rows="10" cols="96" disabled></textarea>
+    <br><br>
+
+    <script src="./jszip.min.js"></script>
+    <script src="./default_Loc.js"></script>
+
+    <script>
+const downloadLink = document.querySelector("#download-link");
+const prepareButton = document.querySelector("#prepare-button");
+const savedImages = [];
+let candidateNumber = 1;
+
+const question_Loc = [];
+const answers = [];
+const paper1ScoreList = [];
+const paper2ScoreList = [];
+const partIIScores = [];
+
+let storedImageUrl;
+let storedImageUrl2;
+
+const fileUpload = document.querySelector("#file-upload");
+const fileUpload2 = document.querySelector("#file-upload2");
+
+let imageWidth = 0;
+let imageHeight = 0;
+let imageWidth2 = 0;
+let imageHeight2 = 0;
+
+function appendImageToDocument(blob) {
+    const el = document.createElement("img")
+    el.src = URL.createObjectURL(blob)
+
+    document.body.appendChild(el)
+}
+
+function getImageDimension(file, nextFunction) { // the 'nextFunction' is actually the function 'afterImageDimensionIsLoaded'
+    const url = URL.createObjectURL(file);
+    const elem = document.createElement("img");
+    elem.src = url;
+    elem.onload = () => {
+        let w = elem.width
+        let h = elem.height
+        nextFunction({ width: w, height: h })
+    }
+    // return would not work here because the image is not loaded yet
+}
+
+fileUpload.onchange = (e) => {
+    let storedImage = fileUpload.files[0]
+
+    function afterImageDimensionIsLoaded(a) {
+        // rearranged the statement in a callback function
+        imageWidth = a.width;
+        imageHeight = a.height;
+        storedImageUrl = URL.createObjectURL(storedImage);
+        imageUrl.value = storedImageUrl;
+    }
+    getImageDimension(storedImage, afterImageDimensionIsLoaded);
+}
+
+fileUpload2.onchange = (e) => {
+    let storedImage = fileUpload2.files[0]
+
+    function afterImageDimensionIsLoaded(b) {
+        // rearranged the statement in a callback function
+        imageWidth2 = b.width;
+        imageHeight2 = b.height;
+        storedImageUrl2 = URL.createObjectURL(storedImage);
+        imageUrl2.value = storedImageUrl2;
+    }
+    getImageDimension(storedImage, afterImageDimensionIsLoaded);
+}
+
+function showText(fileId, areaId) {
+    let file = document.getElementById(fileId).files[0];
+    let reader = new FileReader();
+    reader.onload = function (e) {
+        let textArea = document.getElementById(areaId);
+        textArea.value = e.target.result;
+        myTextArea2.value = default_Loc;
+        loadList(answers, "myTextArea", 3);
+        createScoreList("myTextArea", partIIScores);
+        scoreFile.value = displayScoreList(partIIScores);
+        myLocationFile.removeAttribute("disabled");
+    };
+    reader.readAsText(file);
+}
+
+function showText2(fileId, areaId) {
+    let file = document.getElementById(fileId).files[0];
+    let reader = new FileReader();
+    reader.onload = function (e) {
+        let textArea = document.getElementById(areaId);
+        textArea.value = e.target.result;
+    };
+    reader.readAsText(file);
+}
+
+function loadList(list, textArea, itemNo) {
+    list.splice(0, list.length);
+    let string = document.getElementById(textArea).value;
+    let array = string.split("\n");
+    for (let i = 0; i < array.length - 1; i++) {
+        if (itemNo == 0) {
+            list.push(array[i]);
+        } else {
+            let strar = array[i].split(";");
+            list.push(strar[itemNo - 1]);
+        };
+    };
+}
+
+function createScoreList(textArea, scoreList) {
+    scoreList.splice(0, scoreList.length);
+    let string = document.getElementById(textArea).value;
+    let array = string.split("\n");
+    for (let i = 0; i < array.length; i++) {
+        scoreList.push(array[i] + ";0");
+    };
+}
+
+function displayScoreList(list) {
+    let string = "";
+    for (let i = 0; i < list.length - 1; i++) {
+        string += (list[i] + "\n");
+    };
+    return string;
+}
+
+function newTab() {
+    window.open(storedImageUrl, "_blank");
+}
+
+function newTab2() {
+    window.open(storedImageUrl2, "_blank");
+}
+
+function findAverage(arr) {
+    let sum = 0;
+    for (let i = 0; i < arr.length; i++) {
+        sum += arr[i];
+    }
+    return sum / arr.length;
+}
+
+function markPapers() {
+    if (myTextArea.value == "") {
+        alert("Please select answer file!");
+    } else if (imageUrl.value == "") {
+        alert("Please select paper 1 answer sheet!");
+    } else if (imageUrl2.value == "") {
+        alert("Please select paper 2 answer sheet!");
+    } else {
+        loadList(question_Loc, "myTextArea2", 0);
+        let z = markAPaper(storedImageUrl, imageHeight, imageWidth, 1);
+        let y = markAPaper(storedImageUrl2, imageHeight2, imageWidth2, 2);
+        document.getElementById("saveResults").disabled = false;
+    };
+}
+
+function markAPaper(myImageUrl, myImageHeight, myImageWidth, paperNo) {
+
+    const myCanvas = new OffscreenCanvas(myImageWidth, myImageHeight);
+    const ctx = myCanvas.getContext("2d");
+    let img = new Image;
+    let paperScore = 0;
+    const paperScoreLoc = [700, 150];
+
+    const refPoint1 = [119, 761];
+    const refPoint2 = [795, 761];
+    const newRefPoint = [0, 0];
+    const newRefPoint1 = [0, 0];
+    const newRefPoint2 = [0, 0];
+
+    const calPoint = [468, 286];
+    const rectHeight = 11;
+    const circleSpacing = 19;
+    const origin = [0, 0];
+    
+    let translated_x = 0;
+    let translated_y = 0;
+    let rgbValue = 0;
+    
+    //Reset paper score list
+    paper1ScoreList.splice(0, paper1ScoreList.length);
+    paper2ScoreList.splice(0, paper2ScoreList.length);
+
+    img.onload = function () {
+
+        function redDot(xstart) {
+            const X_List = [];
+            const Y_List = [];
+            for (let x = xstart; x < Math.round(myImageHeight / 6) + xstart; x++) {
+                for (let y = Math.round(myImageHeight / 2); y < Math.round(myImageHeight / 2) +
+                    Math.round(myImageHeight / 6); y++) {
+                    const pixel = ctx.getImageData(x, y, 1, 1);
+                    const r = pixel.data[0];
+                    const g = pixel.data[1];
+                    const b = pixel.data[2];
+                    if (r > 165 && g < 130 && b < 130) {
+                        X_List.push(x);
+                        Y_List.push(y);
+                    }
+                }
+            }
+            newRefPoint[0] = Math.round(findAverage(X_List));
+            newRefPoint[1] = Math.round(findAverage(Y_List));
+        };
+
+        function readRGB(xValue, yValue, rectHeight) {
+            const rgb_List = [];
+            let x_start = Math.round(xValue - rectHeight / 2);
+            let y_start = Math.round(yValue - rectHeight / 2);
+            for (let x = x_start; x < x_start + rectHeight; x++) {
+                for (let y = y_start; y < y_start + rectHeight; y++) {
+                    const pixel = ctx.getImageData(x, y, 1, 1);
+                    const r = pixel.data[0];
+                    const g = pixel.data[1];
+                    const b = pixel.data[2];
+                    rgb_List.push(Math.round((r + g + b) / 3));
+                }
+            }
+            rgbValue = Math.round(findAverage(rgb_List));
+        };
+
+        function circleChoice(x, y, radius) {
+            ctx.beginPath();
+            ctx.arc(x, y, radius, 0, 2 * Math.PI);
+            ctx.strokeStyle = "orange";
+            ctx.lineWidth = 3;
+            ctx.stroke();
+        };
+
+        function newPoint(x, y) {
+            translated_x = origin[0] + Math.round(Math.cos(Math.atan2(y, x) + angle)
+                * Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2)) * zoomFactor);
+            translated_y = origin[1] + Math.round(Math.sin(Math.atan2(y, x) + angle)
+                * Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2)) * zoomFactor);
+        };
+
+        function scoreOneQuestion(z) {
+
+            let strarLoc = question_Loc[z].split(";");
+            newPoint(strarLoc[0], strarLoc[1]);
+            let new_xx = translated_x;
+            let new_yy = translated_y;
+
+            let xLoc_A = new_xx - newCircleSpacing * 2;
+            let xLoc_B = new_xx - newCircleSpacing + 1;
+            let xLoc_C = new_xx + 2;
+            let xLoc_D = new_xx + newCircleSpacing + 3;
+            let xLoc_E = new_xx + newCircleSpacing * 2 + 4;
+
+            let scoreQuestion = [];
+            let xLoc = [xLoc_A, xLoc_B, xLoc_C, xLoc_D, xLoc_E];
+            let theChoice = ["a", "b", "c", "d", "e"];
+
+            let theValue = 255;
+
+            for (let i = 0; i < 5; i++) {
+                readRGB(xLoc[i], new_yy, newRectHeight);
+                theValue = rgbValue;
+                if (theValue < cutoff) {
+                    scoreQuestion += theChoice[i];
+                };
+            };
+
+            if (answers[z] == "a") {
+                circleChoice(xLoc_A, new_yy, Math.round(newCircleSpacing / 2));
+            };
+            if (answers[z] == "b") {
+                circleChoice(xLoc_B, new_yy, Math.round(newCircleSpacing / 2));
+            };
+            if (answers[z] == "c") {
+                circleChoice(xLoc_C, new_yy, Math.round(newCircleSpacing / 2));
+            };
+            if (answers[z] == "d") {
+                circleChoice(xLoc_D, new_yy, Math.round(newCircleSpacing / 2));
+            };
+            if (answers[z] == "e") {
+                circleChoice(xLoc_E, new_yy, Math.round(newCircleSpacing / 2));
+            };
+
+            let scoreToAdd = "0";
+            if (scoreQuestion == answers[z]) {
+                scoreToAdd = "1";
+                paperScore += 1;
+                ctx.font = "30px Arial";
+                ctx.fillStyle = "red";
+                ctx.fillText("1", xLoc_E + newCircleSpacing * 3 / 4, new_yy);
+            };
+            if (paperNo == 2) {
+                paper2ScoreList.push(scoreToAdd);
+            } else {
+                paper1ScoreList.push(scoreToAdd);
+            };
+        };
+
+        ctx.drawImage(img, 0, 0);
+        redDot(0);
+        newRefPoint1[0] = newRefPoint[0];
+        newRefPoint1[1] = newRefPoint[1];
+        redDot(myImageWidth - Math.round(myImageHeight / 6));
+        newRefPoint2[0] = newRefPoint[0];
+        newRefPoint2[1] = newRefPoint[1];
+
+        let zoomFactor = Math.sqrt(Math.pow(newRefPoint2[0] - newRefPoint1[0], 2) +
+            Math.pow(newRefPoint2[1] - newRefPoint1[1], 2)) / (refPoint2[0] - refPoint1[0]);
+
+        let newRectHeight = Math.round(rectHeight * zoomFactor);
+
+        let newCircleSpacing = Math.round(circleSpacing * zoomFactor);
+
+        let angle = Math.atan2(newRefPoint2[1] - newRefPoint1[1], newRefPoint2[0] - newRefPoint1[0]);
+
+        origin[0] = newRefPoint1[0] - Math.round(Math.sin(Math.atan2(refPoint1[0], refPoint1[1]) - angle)
+            * Math.sqrt(Math.pow(refPoint1[1], 2) + Math.pow(refPoint1[0], 2)) * zoomFactor);
+
+        origin[1] = newRefPoint1[1] - Math.round(Math.cos(Math.atan2(refPoint1[0], refPoint1[1]) - angle)
+            * Math.sqrt(Math.pow(refPoint1[1], 2) + Math.pow(refPoint1[0], 2)) * zoomFactor);
+
+        newPoint(calPoint[0], calPoint[1]);
+        let new_x = translated_x;
+        let new_y = translated_y;
+
+        readRGB(new_x, new_y, newRectHeight);
+        let blackValue = rgbValue;
+
+        circleChoice(new_x, new_y, Math.round(newCircleSpacing / 2));
+
+        readRGB(new_x + newCircleSpacing * 2, new_y, newRectHeight);
+        let whiteValue = rgbValue;
+
+        circleChoice(new_x + newCircleSpacing * 2, new_y, Math.round(newCircleSpacing / 2));
+
+        let cutoff = blackValue + Math.round((whiteValue - blackValue) * 170 / 255);
+
+        let p = 0;
+        if (paperNo == 2) {
+            p = 75;
+        };
+
+        for (let i = 0; i < 75; i++) {
+            scoreOneQuestion(i + p);
+        }
+
+        newPoint(paperScoreLoc[0], paperScoreLoc[1]);
+        let score_x = translated_x;
+        let score_y = translated_y;
+        ctx.font = "60px Arial";
+        ctx.fillStyle = "blue";
+        ctx.fillText(paperScore, score_x, score_y + newCircleSpacing);
+
+        document.getElementById('theCanvas').height = 1330;
+
+        const theCanvas = document.getElementById("theCanvas");
+        const ctx2 = theCanvas.getContext("2d");
+        let factor = Math.min(theCanvas.width / myCanvas.width, theCanvas.height / myCanvas.height);
+        ctx2.scale(factor, factor);
+        ctx2.drawImage(myCanvas, 0, 0);
+        ctx2.scale(1 / factor, 1 / factor);
+
+        if (paperNo == 1) {
+            paperOneMarks.value = paperScore;
+
+            theCanvas.toBlob(function (blob) {
+                // save the canvas content
+                savedImages.push({
+                    name: `candidate${candidateNumber}_paper1_marked.png`,
+                    blob: blob
+                })
+
+                appendImageToDocument(blob)
+            });
+        };
+
+        if (paperNo == 2) {
+            paperTwoMarks.value = paperScore;
+
+            theCanvas.toBlob(function (blob) {
+
+                // save the canvas content
+                savedImages.push({
+                    name: `candidate${candidateNumber}_paper2_marked.png`,
+                    blob: blob
+                })
+
+                appendImageToDocument(blob)
+            });
+        };
+
+        document.getElementById('theCanvas').height = 5;
+    };
+
+    img.src = myImageUrl;
+    return "1";
+};
+
+prepareButton.onclick = function () {
+
+    const zipFile = new JSZip();
+
+    const currDate = new Date();
+    const dateWithOffset = new Date(currDate.getTime() - currDate.getTimezoneOffset() * 60000);
+    // replace the default date with dateWithOffset
+    JSZip.defaults.date = dateWithOffset;
+
+    const imageDirectory = zipFile.folder("Marked_Papers")
+    for (const it of savedImages) {
+        imageDirectory.file(it.name, it.blob)
+    }
+
+    zipFile.file("PartII_Score.txt", scoreFile.value);
+
+    zipFile.generateAsync({ type: "blob" }).then(function (zipFileBlob) {
+        const zipFileUrl = URL.createObjectURL(zipFileBlob);
+        downloadLink.setAttribute("href", zipFileUrl);
+    })
+}
+
+function addScores() {
+
+    scoresToFile();
+    scoreFile.value = displayScoreList(partIIScores);
+    document.getElementById("saveResults").disabled = true;
+    imageUrl.value = "";
+    imageUrl2.value = "";
+    paperOneMarks.value = "";
+    paperTwoMarks.value = "";
+    candidateNumber += 1;
+
+}
+
+function scoresToFile() {
+    let string = "";
+    for (let i = 0; i < 75; i++) {
+        let strar = partIIScores[i].split(";");
+        let updatedScore = parseInt(strar[3]) + parseInt(paper1ScoreList[i]);
+        partIIScores[i] = strar[0] + ";" + strar[1] + ";" + strar[2] + ";" + updatedScore;
+    };
+    for (let i = 0; i < 75; i++) {
+        let strar = partIIScores[i + 75].split(";");
+        let updatedScore = parseInt(strar[3]) + parseInt(paper2ScoreList[i]);
+        partIIScores[i + 75] = strar[0] + ";" + strar[1] + ";" + strar[2] + ";" + updatedScore;
+    };
+
+}
+
+function resetPage() {
+    location.reload();
+}
+
+
+
+    </script>
+</body>
+
+</html>
