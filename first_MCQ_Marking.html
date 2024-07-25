@@ -277,7 +277,7 @@ function getScoreFileName(f) {
 function markAPage(myImageUrl, myImageHeight, myImageWidth, pageNo) {
 
     const myCanvas = new OffscreenCanvas(myImageWidth, myImageHeight);
-    const ctx = myCanvas.getContext("2d");
+    const ctx = myCanvas.getContext("2d", { willReadFrequently: true });
     let img = new Image;
     let pageScore = 0;
     const pageScoreLoc = [700, 150];
@@ -506,7 +506,7 @@ function markAPage(myImageUrl, myImageHeight, myImageWidth, pageNo) {
         document.getElementById('theCanvas').height = 1330;
 
         const theCanvas = document.getElementById("theCanvas");
-        const ctx2 = theCanvas.getContext("2d");
+        const ctx2 = theCanvas.getContext("2d", { willReadFrequently: true });
         let factor = Math.min(theCanvas.width / myCanvas.width, theCanvas.height / myCanvas.height);
         ctx2.scale(factor, factor);
         ctx2.drawImage(myCanvas, 0, 0);
