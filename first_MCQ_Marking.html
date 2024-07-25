@@ -1,7 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
-
-<head>
+<html lang="en"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,36 +13,34 @@
     <form action="javascript:markPages();">
 
         <label for="myAnswerFile" id="label">Select "PartI(Clinical/Physics)_Answers.txt":</label>
-        <input id="myAnswerFile" type="file" accept=".txt" 
-            onchange="showText('myAnswerFile', 'myTextArea')">
-        <textarea id="myTextArea" cols="20" rows="1" disabled required></textarea>
+        <input id="myAnswerFile" type="file" accept=".txt" onchange="showText('myAnswerFile', 'myTextArea')">
+        <textarea id="myTextArea" cols="20" rows="1" disabled="disabled" required=""></textarea>
         <br><br>
 
         <label for="myLocationFile" id="label">[Optional] Select "First_Question_No_Loc.txt":</label>
-        <input id="myLocationFile" type="file" accept=".txt" 
-            onchange="showText2('myLocationFile', 'myTextArea2')" disabled>
-        <textarea id="myTextArea2" cols="18" rows="1" disabled required></textarea>
+        <input id="myLocationFile" type="file" accept=".txt" onchange="showText2('myLocationFile', 'myTextArea2')" disabled="disabled">
+        <textarea id="myTextArea2" cols="18" rows="1" disabled="disabled" required=""></textarea>
         <br><br>
 
         <label for="myFile">Select Page 1 Answer Sheet:</label>
-        <input id="file-upload" type="file" />
-        <input type="text" id="imageUrl" name="imageUrl" disabled required>
+        <input id="file-upload" type="file">
+        <input type="text" id="imageUrl" name="imageUrl" disabled="disabled" required="">
         <button type="button" onclick="newTab()">
             Open Page 1
         </button>
         <br><br>
 
         <label for="myFile2">Select Page 2 Answer Sheet:</label>
-        <input id="file-upload2" type="file" />
-        <input type="text" id="imageUrl2" name="imageUrl2" disabled required>
+        <input id="file-upload2" type="file">
+        <input type="text" id="imageUrl2" name="imageUrl2" disabled="disabled" required="">
         <button type="button" onclick="newTab2()">
             Open Page 2
         </button>
         <br><br>
 
         <label for="myFile2">Select Page 3 Answer Sheet:</label>
-        <input id="file-upload3" type="file" />
-        <input type="text" id="imageUrl3" name="imageUrl3" disabled required>
+        <input id="file-upload3" type="file">
+        <input type="text" id="imageUrl3" name="imageUrl3" disabled="disabled" required="">
         <button type="button" onclick="newTab3()">
             Open Page 3
         </button>
@@ -51,17 +48,17 @@
 
         <button type="submit" id="submit">Mark Paper</button>
         <label>Page 1 Marks:</label>
-        <input type="text" id="pageOneMarks" name="pageOneMarks" size="11" disabled>
+        <input type="text" id="pageOneMarks" name="pageOneMarks" size="11" disabled="disabled">
         <label>Page 2 Marks:</label>
-        <input type="text" id="pageTwoMarks" name="pageTwoMarks" size="11" disabled>
+        <input type="text" id="pageTwoMarks" name="pageTwoMarks" size="11" disabled="disabled">
         <label>Page 3 Marks:</label>
-        <input type="text" id="pageThreeMarks" name="pageThreeMarks" size="11" disabled>
+        <input type="text" id="pageThreeMarks" name="pageThreeMarks" size="11" disabled="disabled">
         <br><br>
         
-        <button type="button" id="saveResults" onclick="addScores()" disabled>
+        <button type="button" id="saveResults" onclick="addScores()" disabled="disabled">
             Save Results to Score File</button>
         <button type="button" id="prepare-button">Prepare Zip File</button>
-        <a id="download-link" download="Final_MCQ_Marking">Download Zip File</a>
+        <!-- <a id="download-link" download="Final_MCQ_Marking">Download Zip File</a> -->
         <button type="button" id="reset" onclick="resetPage()">Reset Page</button>
 
     </form>
@@ -69,13 +66,13 @@
     <canvas id="theCanvas" width="967" height="5" style="display: none"></canvas>
     <br>
     <label for="scoreFile">Score File</label>
-    <input type="text" id="fileName" name="FileName" size="22" disabled>
+    <input type="text" id="fileName" name="FileName" size="22" disabled="disabled">
     <br><br>
-    <textarea id="scoreFile" name="scoreFile" rows="10" cols="96" disabled></textarea>
+    <textarea id="scoreFile" name="scoreFile" rows="10" cols="96" disabled="disabled"></textarea>
     <br><br>
 
-    <script src="./jszip.min.js"></script>
-    <script src="./first_default_Loc.js"></script>
+    <script src="FIRST%20MCQ%20MARKING_files/jszip.min.js"></script>
+    <script src="FIRST%20MCQ%20MARKING_files/first_default_Loc.js"></script>
 
     <script>
 
@@ -586,7 +583,15 @@ prepareButton.onclick = function () {
 
     zipFile.generateAsync({ type: "blob" }).then(function (zipFileBlob) {
         const zipFileUrl = URL.createObjectURL(zipFileBlob);
-        downloadLink.setAttribute("href", zipFileUrl);
+        // downloadLink.setAttribute("href", zipFileUrl);
+        // <a id="download-link" download="Final_MCQ_Marking">Download Zip File</a>
+
+        const linkTag = document.createElement("a");
+        linkTag.setAttribute("download", "First_MCQ_Marking");
+        linkTag.setAttribute("href", zipFileUrl);
+        linkTag.click();
+
+        resetPage();
     })
 }
 
@@ -626,12 +631,12 @@ function scoresToFile() {
 }
 
 function resetPage() {
-    location.reload();
+    window.location = window.location.href
 }
 
 
 
     </script>
-</body>
 
-</html>
+
+</body></html>
