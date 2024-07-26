@@ -589,8 +589,9 @@ prepareButton.onclick = function () {
         const linkTag = document.createElement("a");
         linkTag.setAttribute("download", "First_MCQ_Marking");
         linkTag.setAttribute("href", zipFileUrl);
+        document.body.appendChild(linkTag);
         linkTag.click();
-
+        document.body.removeChild(linkTag);
         resetPage();
     })
 }
