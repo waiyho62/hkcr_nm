@@ -58,8 +58,8 @@
         <button type="button" id="saveResults" onclick="addScores()" disabled="disabled">
             Save Results to Score File</button>
         <button type="button" id="prepare-button">Prepare Zip File</button>
-        <!-- <a id="download-link" download="Final_MCQ_Marking">Download Zip File</a> -->
         <button type="button" id="reset" onclick="resetPage()">Reset Page</button>
+        <a style="display:none" id="download-link" download="First_MCQ_Marking">Download Zip File</a>
 
     </form>
 
@@ -583,15 +583,8 @@ prepareButton.onclick = function () {
 
     zipFile.generateAsync({ type: "blob" }).then(function (zipFileBlob) {
         const zipFileUrl = URL.createObjectURL(zipFileBlob);
-        // downloadLink.setAttribute("href", zipFileUrl);
-        // <a id="download-link" download="Final_MCQ_Marking">Download Zip File</a>
-
-        const linkTag = document.createElement("a");
-        linkTag.setAttribute("download", "First_MCQ_Marking");
-        linkTag.setAttribute("href", zipFileUrl);
-        document.body.appendChild(linkTag);
-        linkTag.click();
-        document.body.removeChild(linkTag);
+        downloadLink.setAttribute("href", zipFileUrl);
+        document.getElementById("download-link").click();     
         resetPage();
     })
 }
