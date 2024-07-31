@@ -45,10 +45,10 @@
         <input type="text" id="paperOneMarks" name="paperOneMarks" size="11" disabled>
         <label> Paper 2 Marks:</label>
         <input type="text" id="paperTwoMarks" name="paperTwoMarks" size="11" disabled>
-        <button type="button" id="saveResults" onclick="addScores()" disabled>
-            Add Scores to Score File</button>
         <br><br>
 
+        <button type="button" id="saveResults" onclick="addScores()" disabled>
+            Add Scores to Score File</button>
         <button type="button" id="prepare-button">Prepare Zip File</button>
         <button type="button" id="reset" onclick="resetPage()">Reset Page</button>
         <a style="display:none" id="download-link" download="Final_MCQ_Marking">Download Zip File</a>
@@ -478,7 +478,7 @@ prepareButton.onclick = function () {
         const zipFileUrl = URL.createObjectURL(zipFileBlob);
         downloadLink.setAttribute("href", zipFileUrl);
         document.getElementById("download-link").click();
-        resetPage();
+        //resetPage();
     })
 }
 
