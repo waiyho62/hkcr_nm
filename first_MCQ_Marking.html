@@ -585,7 +585,9 @@ prepareButton.onclick = function () {
         const zipFileUrl = URL.createObjectURL(zipFileBlob);
         downloadLink.setAttribute("href", zipFileUrl);
         document.getElementById("download-link").click();     
-        resetPage();
+        setTimeout(() => {
+            resetPage();
+        }, 1000);
     })
 }
 
