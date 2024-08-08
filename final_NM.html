@@ -127,9 +127,11 @@ Press the button ([Choice A] to [Choice E]) to select T and the button [Answer] 
 <input type="text" id="enterKeyword" name="enterKeyword" size="30" onfocusout="RemoveSemicolonComma('enterKeyword')" required>
 <br><br>
 <button type="submit">Save Question</button>
+<button type="button" id="undo" onclick="undoLastEntry()" disabled>Remove Recent Saved Question</button>
+
 <button type="button" id="prepare-button">Prepare Zip File</button>
-<a id="download-link" download="ToHKCR">Download Zip File</a>
 <button type="button" onclick="ResetForm()">Reset to Question 1</button>
+<a style="display:none" id="download-link" download="ToHKCR">Download Zip File</a>
 </form>
 
 <br>
@@ -148,6 +150,7 @@ Press the button ([Choice A] to [Choice E]) to select T and the button [Answer] 
 const downloadLink = document.querySelector("#download-link");
 const prepareButton = document.querySelector("#prepare-button");
 const savedImages = [];
+let recentSavedQuestion = "";
 
 function SelectAuthor() {
   var e = document.getElementById("authorList");
@@ -284,6 +287,7 @@ function SortChoices() {
 }
 
 function SaveQuestion(){
+  SortChoices();
   if (answer.value && topicId.value) {
   let savedImageName = ""
   if (storedImage) { 
@@ -304,6 +308,23 @@ function SaveQuestion(){
   savedQuestions.value += enterKeyword.value + ";";
   savedQuestions.value += enterAuthor.value + ";";
   savedQuestions.value += referenceScore.value;
+  
+  recentSavedQuestion = "";
+  recentSavedQuestion += '\r\n';
+  recentSavedQuestion += question.value + ";";
+  recentSavedQuestion += savedImageName + ";";
+  recentSavedQuestion += "a. " + choiceA.value + ";";
+  recentSavedQuestion += "b. " + choiceB.value + ";";
+  recentSavedQuestion += "c. " + choiceC.value + ";";
+  recentSavedQuestion += "d. " + choiceD.value + ";";
+  recentSavedQuestion += "e. " + choiceE.value + ";";
+  recentSavedQuestion += answer.value + ";";
+  recentSavedQuestion += topicId.value + ";";
+  recentSavedQuestion += enterKeyword.value + ";";
+  recentSavedQuestion += enterAuthor.value + ";";
+  recentSavedQuestion += referenceScore.value;
+  
+  document.getElementById("undo").removeAttribute("disabled");
 
   var x = Number(questionNumber.value) + 1;
   questionNumber.value = x;} else {
@@ -311,10 +332,28 @@ function SaveQuestion(){
   }
 }
 
+function undoLastEntry() {
+   let x = savedQuestions.value;
+   let y = recentSavedQuestion
+   savedQuestions.value = x.substring(0, x.length - y.length + 1);
+   let z = Number(questionNumber.value) - 1;
+   questionNumber.value = z;
+   document.getElementById("undo").disabled = true;
+}
+
 prepareButton.onclick = function () {
-    
+      
+    document.getElementById("undo").disabled = true;
+
+
     const zipFile = new JSZip();
     
+    const currDate = new Date();
+    const dateWithOffset = new Date(currDate.getTime() - currDate.getTimezoneOffset() * 60000);
+    // replace the default date with dateWithOffset
+    JSZip.defaults.date = dateWithOffset;
+
+
   for (var i = 0; i < savedImages.length; i++) {
     if (savedImages[i][1]) {zipFile.folder("Images").file(savedImages[i][0], savedImages[i][1])};
   }  
@@ -324,6 +363,11 @@ prepareButton.onclick = function () {
     zipFile.generateAsync({ type: "blob" }).then(function (zipFileBlob) {
         const zipFileUrl = URL.createObjectURL(zipFileBlob);
         downloadLink.setAttribute("href", zipFileUrl);
+        document.getElementById("download-link").click();
+        setTimeout(() => {
+            resetPage();
+        }, 1000);
+
     })
 }
 

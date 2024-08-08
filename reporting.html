@@ -188,9 +188,11 @@ div {
 <input type="text" id="enterKeyword" name="enterKeyword" size="30" onfocusout="RemoveSemicolonComma('enterKeyword')" required>
 <br><br>
 <button type="submit" id="submit">Save Question</button>
+<button type="button" id="undo" onclick="undoLastEntry()" disabled>Remove Recent Saved Question</button>
+
 <button type="button" id="prepare-button">Prepare Zip File</button>
-<a id="download-link" download="ToHKCR">Download Zip File</a>
 <button type="button" onclick="ResetForm()">Reset to Question 1</button>
+<a style="display:none" id="download-link" download="ToHKCR">Download Zip File</a>
 </form>
 
 <br>
@@ -210,6 +212,7 @@ div {
 const downloadLink = document.querySelector("#download-link");
 const prepareButton = document.querySelector("#prepare-button");
 const savedImages = [];
+let recentSavedQuestion = "";
 
 function SelectAuthor() {
   var e = document.getElementById("authorList");
@@ -416,7 +419,7 @@ function SetQuestionE(fieldId) {
 
 
 function SaveQuestion(){
-  if (topicId.value) {
+  if (topicId.value && storedImage) {
   let savedImageName = ""
   if (storedImage) { 
     savedImageName = enterAuthor.value + "_Reporting_Question" + questionNumber.value + "_Film1" + ".jpg";
@@ -480,20 +483,62 @@ function SaveQuestion(){
   savedQuestions.value += theAnswerD + ";";
   savedQuestions.value += theAnswerE + ";";
   savedQuestions.value += enterKeyword.value;
+  
+  recentSavedQuestion = "";
+  recentSavedQuestion += '\r\n';
+  recentSavedQuestion += topicId.value + ";";
+  recentSavedQuestion += enterAuthor.value + ";";
+  recentSavedQuestion += clinicalHistory.value + ";";
+  recentSavedQuestion += modality1.value + ";";
+  recentSavedQuestion += modality2.value + ";";
+  recentSavedQuestion += savedImageName + ";";
+  recentSavedQuestion += savedImageName2 + ";";
+  recentSavedQuestion += savedImageName3 + ";";
+  recentSavedQuestion += savedImageName4 + ";";
+  recentSavedQuestion += "a. " + questionA.value + ";";
+  recentSavedQuestion += "b. " + questionB.value + ";";
+  recentSavedQuestion += theQuestionC + ";";
+  recentSavedQuestion += theQuestionD + ";";
+  recentSavedQuestion += theQuestionE + ";";
+  recentSavedQuestion += "a. " + answerA.value + ";";
+  recentSavedQuestion += "b. " + answerB.value + ";";
+  recentSavedQuestion += theAnswerC + ";";
+  recentSavedQuestion += theAnswerD + ";";
+  recentSavedQuestion += theAnswerE + ";";
+  recentSavedQuestion += enterKeyword.value;
+  
+  document.getElementById("undo").removeAttribute("disabled");
+  
 
-  var x = Number(questionNumber.value) + 1;
+  let x = Number(questionNumber.value) + 1;
   questionNumber.value = x;} else {
-  alert("Select topic!")
+  alert("Select topic and/or at least one film!")
   }
 }
+
+function undoLastEntry() {
+   let x = savedQuestions.value;
+   let y = recentSavedQuestion
+   savedQuestions.value = x.substring(0, x.length - y.length + 1);
+   let z = Number(questionNumber.value) - 1;
+   questionNumber.value = z;
+   document.getElementById("undo").disabled = true;
+}
+
 
 prepareButton.onclick = function () {
    
   document.getElementById('submit').setAttribute('disabled', "");
- 
+  document.getElementById("undo").disabled = true;
+
     const zipFile = new JSZip();
     
-  for (var i = 0; i < savedImages.length; i++) {
+     const currDate = new Date();
+    const dateWithOffset = new Date(currDate.getTime() - currDate.getTimezoneOffset() * 60000);
+    // replace the default date with dateWithOffset
+    JSZip.defaults.date = dateWithOffset;
+
+ for (var i = 0; i < savedImages.length; i++) {
     if (savedImages[i][1]) {zipFile.folder("Images").file(savedImages[i][0], savedImages[i][1])};
   }  
 
@@ -502,6 +547,11 @@ prepareButton.onclick = function () {
     zipFile.generateAsync({ type: "blob" }).then(function (zipFileBlob) {
         const zipFileUrl = URL.createObjectURL(zipFileBlob);
         downloadLink.setAttribute("href", zipFileUrl);
+        document.getElementById("download-link").click();
+        setTimeout(() => {
+            resetPage();
+        }, 1000);
+
     })
 }
 
