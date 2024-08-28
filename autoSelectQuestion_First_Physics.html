@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+ 
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HKCR NM FIRST FELLOWSHIP EXAMINATION PHYSICS MCQ SELECTION</title>
+</head>
+
+<style type="text/css">
+    div {
+        'display: flex;
+        'flex-direction: column;
+        align-items: left;
+    }
+     
+    input {
+        margin-top: 10px;
+    }
+     
+    textarea {
+        margin-top: 15px;
+        //width: 70%;
+    }
+
+    input[type="number"] {
+        width:57px;
+    }
+</style>
+ 
+<body style="background-color:#ece6ff;">
+    
+    <h2 style="font-size:200%;"> HKCR NM FIRST EXAM PHYSICS MCQ SELECTION</h2>
+    <div>
+        <label for="myFile">Select "PartI_Physics_List.txt":</label>
+        <input id="myFile" type="file" accept=".txt" onchange="ShowText('myFile', 'myTextArea', 'button1')">
+        <button type="button" id="button1" onclick="Load_List()" disabled>Load List</button>
+        <br>
+        <textarea id="myTextArea" cols="89" rows="1" disabled></textarea>
+        <br>
+        <label for="myFile2">Select "PartI_Physics_Default.txt":</label>
+        <input id="myFile2" type="file" accept=".txt" onchange="ShowText('myFile2', 'myTextArea2', 'button2')" disabled>
+        <button type="button" id="button2" onclick="Load_Default()" disabled>Load Default</button>
+        <br>
+        <textarea id="myTextArea2" cols="89" rows="1" disabled></textarea>
+        <br>
+	<input type="text" id="GrandTotal" size="32" value="Total number of questions: " disabled>
+        <input type="text" size="23" value="AVAILABLE" disabled>
+        <input type="text" size="24" value="SELECTED" disabled>
+        <br>
+        <input type="text" size="4" value="Topic ID" disabled>
+        <input type="text" size="22" value="Topic" disabled>
+        <input type="text" size="4" value="Old" disabled>
+        <input type="text" size="4" value="New" disabled>
+        <input type="text" size="4" value="Total" disabled>
+        <input type="text" size="4" value="Old" disabled>
+        <input type="text" size="4" value="New" disabled>
+        <input type="text" size="4" value="Total" disabled>
+        <br>
+
+        <input type="text" size="4" value="1" disabled>
+        <input type="text" size="22" value="Radiopharmacy" disabled>
+        <input type="number" id="Old1a" disabled>
+        <input type="number" id="New1a" disabled>
+        <input type="number" id="Total1a" disabled>
+        <input type="number" id="Old1b" min="0" onchange="TopicDefaultTotal('Old1b', 'New1b', 'Total1b')">
+        <input type="number" id="New1b" min="0" onchange="TopicDefaultTotal('Old1b', 'New1b', 'Total1b')">
+        <input type="number" id="Total1b" disabled>
+        <br>
+
+        <input type="text" size="4" value="2" disabled>
+        <input type="text" size="22" value="Radiation Detectors" disabled>
+        <input type="number" id="Old2a" disabled>
+        <input type="number" id="New2a" disabled>
+        <input type="number" id="Total2a" disabled>
+        <input type="number" id="Old2b" min="0" onchange="TopicDefaultTotal('Old2b', 'New2b', 'Total2b')">
+        <input type="number" id="New2b" min="0" onchange="TopicDefaultTotal('Old2b', 'New2b', 'Total2b')">
+        <input type="number" id="Total2b" disabled>
+        <br>
+
+        <input type="text" size="4" value="3" disabled>
+        <input type="text" size="22" value="Gamma Camera" disabled>
+        <input type="number" id="Old3a" disabled>
+        <input type="number" id="New3a" disabled>
+        <input type="number" id="Total3a" disabled>
+        <input type="number" id="Old3b" min="0" onchange="TopicDefaultTotal('Old3b', 'New3b', 'Total3b')">
+        <input type="number" id="New3b" min="0" onchange="TopicDefaultTotal('Old3b', 'New3b', 'Total3b')">
+        <input type="number" id="Total3b" disabled>
+        <br>
+
+        <input type="text" size="4" value="4" disabled>
+        <input type="text" size="22" value="Gamma Camera QC" disabled>
+        <input type="number" id="Old4a" disabled>
+        <input type="number" id="New4a" disabled>
+        <input type="number" id="Total4a" disabled>
+        <input type="number" id="Old4b" min="0" onchange="TopicDefaultTotal('Old4b', 'New4b', 'Total4b')">
+        <input type="number" id="New4b" min="0" onchange="TopicDefaultTotal('Old4b', 'New4b', 'Total4b')">
+        <input type="number" id="Total4b" disabled>
+        <br>
+
+        <input type="text" size="4" value="5" disabled>
+        <input type="text" size="22" value="PET/Cyclotron" disabled>
+        <input type="number" id="Old5a" disabled>
+        <input type="number" id="New5a" disabled>
+        <input type="number" id="Total5a" disabled>
+        <input type="number" id="Old5b" min="0" onchange="TopicDefaultTotal('Old5b', 'New5b', 'Total5b')">
+        <input type="number" id="New5b" min="0" onchange="TopicDefaultTotal('Old5b', 'New5b', 'Total5b')">
+        <input type="number" id="Total5b" disabled>
+        <br>
+
+        <input type="text" size="4" value="6" disabled>
+        <input type="text" size="22" value="Digital Image Processing" disabled>
+        <input type="number" id="Old6a" disabled>
+        <input type="number" id="New6a" disabled>
+        <input type="number" id="Total6a" disabled>
+        <input type="number" id="Old6b" min="0" onchange="TopicDefaultTotal('Old6b', 'New6b', 'Total6b')">
+        <input type="number" id="New6b" min="0" onchange="TopicDefaultTotal('Old6b', 'New6b', 'Total6b')">
+        <input type="number" id="Total6b" disabled>
+        <br>
+
+        <input type="text" size="4" value="7" disabled>
+        <input type="text" size="22" value="SPECT Reconstruction" disabled>
+        <input type="number" id="Old7a" disabled>
+        <input type="number" id="New7a" disabled>
+        <input type="number" id="Total7a" disabled>
+        <input type="number" id="Old7b" min="0" onchange="TopicDefaultTotal('Old7b', 'New7b', 'Total7b')">
+        <input type="number" id="New7b" min="0" onchange="TopicDefaultTotal('Old7b', 'New7b', 'Total7b')">
+        <input type="number" id="Total7b" disabled>
+        <br>
+
+        <input type="text" size="4" value="8" disabled>
+        <input type="text" size="22" value="Statistics" disabled>
+        <input type="number" id="Old8a" disabled>
+        <input type="number" id="New8a" disabled>
+        <input type="number" id="Total8a" disabled>
+        <input type="number" id="Old8b" min="0" onchange="TopicDefaultTotal('Old8b', 'New8b', 'Total8b')">
+        <input type="number" id="New8b" min="0" onchange="TopicDefaultTotal('Old8b', 'New8b', 'Total8b')">
+        <input type="number" id="Total8b" disabled>
+        <br>
+
+        <input type="text" size="4" value="9" disabled>
+        <input type="text" size="22" value="Bone Densitometry" disabled>
+        <input type="number" id="Old9a" disabled>
+        <input type="number" id="New9a" disabled>
+        <input type="number" id="Total9a" disabled>
+        <input type="number" id="Old9b" min="0" onchange="TopicDefaultTotal('Old9b', 'New9b', 'Total9b')">
+        <input type="number" id="New9b" min="0" onchange="TopicDefaultTotal('Old9b', 'New9b', 'Total9b')">
+        <input type="number" id="Total9b" disabled>
+        <br>
+
+        <input type="text" size="4" value="10" disabled>
+        <input type="text" size="22" value="Tracer Kinetics" disabled>
+        <input type="number" id="Old10a" disabled>
+        <input type="number" id="New10a" disabled>
+        <input type="number" id="Total10a" disabled>
+        <input type="number" id="Old10b" min="0" onchange="TopicDefaultTotal('Old10b', 'New10b', 'Total10b')">
+        <input type="number" id="New10b" min="0" onchange="TopicDefaultTotal('Old10b', 'New10b', 'Total10b')">
+        <input type="number" id="Total10b" disabled>
+        <br>
+
+        <input type="text" size="4" value="11" disabled>
+        <input type="text" size="22" value="Radiation Protection & Regulations" disabled>
+        <input type="number" id="Old11a" disabled>
+        <input type="number" id="New11a" disabled>
+        <input type="number" id="Total11a" disabled>
+        <input type="number" id="Old11b" min="0" onchange="TopicDefaultTotal('Old11b', 'New11b', 'Total11b')">
+        <input type="number" id="New11b" min="0" onchange="TopicDefaultTotal('Old11b', 'New11b', 'Total11b')">
+        <input type="number" id="Total11b" disabled>
+        <br>
+
+        <input type="text" size="4" value="12" disabled>
+        <input type="text" size="22" value="Nuclear Decay" disabled>
+        <input type="number" id="Old12a" disabled>
+        <input type="number" id="New12a" disabled>
+        <input type="number" id="Total12a" disabled>
+        <input type="number" id="Old12b" min="0" onchange="TopicDefaultTotal('Old12b', 'New12b', 'Total12b')">
+        <input type="number" id="New12b" min="0" onchange="TopicDefaultTotal('Old12b', 'New12b', 'Total12b')">
+        <input type="number" id="Total12b" disabled>
+        <br>
+
+        <input type="text" size="4" value="13" disabled>
+        <input type="text" size="22" value="CT/MR Physics" disabled>
+        <input type="number" id="Old13a" disabled>
+        <input type="number" id="New13a" disabled>
+        <input type="number" id="Total13a" disabled>
+        <input type="number" id="Old13b" min="0" onchange="TopicDefaultTotal('Old13b', 'New13b', 'Total13b')">
+        <input type="number" id="New13b" min="0" onchange="TopicDefaultTotal('Old13b', 'New13b', 'Total13b')">
+        <input type="number" id="Total13b" disabled>
+        <br>
+
+        <input type="text" size="4" value="14" disabled>
+        <input type="text" size="22" value="Miscellaneous" disabled>
+        <input type="number" id="Old14a" disabled>
+        <input type="number" id="New14a" disabled>
+        <input type="number" id="Total14a" disabled>
+        <input type="number" id="Old14b" min="0" onchange="TopicDefaultTotal('Old14b', 'New14b', 'Total14b')">
+        <input type="number" id="New14b" min="0" onchange="TopicDefaultTotal('Old14b', 'New14b', 'Total14b')">
+        <input type="number" id="Total14b" disabled>
+        <br>
+
+        <input type="text" size="4" value="" disabled>
+        <input type="text" size="22" value="TOTAL" disabled>
+        <input type="number" id="Old15a" disabled>
+        <input type="number" id="New15a" disabled>
+        <input type="number" id="Total15a" disabled>
+        <input type="number" id="Old15b" min="0" disabled>
+        <input type="number" id="New15b" min="0" disabled>
+        <input type="number" id="Total15b" disabled>
+        <br><br>
+
+	<button type="button" id="SaveSelection" onclick="SaveSelection()" disabled>Save Selection</button>
+        <button type="button" id="prepare-button">Prepare Zip File</button>
+        <a id="download-link" download="PartI_Physics">Download Zip File</a>
+        <button type="button" onclick="ResetForm()">Reset</button>
+	<br>
+	<label for="myTextArea3">Selected List:</label>
+	<textarea id="myTextArea3" cols="76" rows="1" disabled></textarea>
+        <br>
+	<label for="myTextArea4">Selected Questions:</label>
+	<textarea id="myTextArea4" cols="71" rows="1" disabled></textarea>
+
+    </div>
+
+<script src="./jszip.min.js"></script>  
+<script>
+
+    const downloadLink = document.querySelector("#download-link");
+    const prepareButton = document.querySelector("#prepare-button");
+
+    var excludedList = ',';
+    var newList = [];
+    var oldList = [];
+    var newAvailable = [0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+    var oldAvailable = [0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+    var defaultList = [];
+    var newDefaultList = [];
+    var selectedQuestions = [];
+    
+    function ShowText(fileId, areaId, buttonId) {
+  	    var file = document.getElementById(fileId).files[0];
+	    var reader = new FileReader();
+	    reader.onload = function (e) {
+    	        var textArea = document.getElementById(areaId);
+    	        textArea.value = e.target.result;
+	    };
+	    reader.readAsText(file);
+        document.getElementById(buttonId).removeAttribute('disabled');
+        }
+    
+    function Load_List() {
+        excludedList = ',';
+        newList = [];
+        oldList = [];
+        newAvailable = [0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+        oldAvailable = [0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+
+	var string = document.getElementById('myTextArea').value;
+        var array = string.split("\n");
+        let g = array.length -1;
+	GrandTotal.value += g;
+
+	//Available new list
+        for (var i = 0; i < array.length - 1; i++) {
+            var strar = array[i].split(";");
+            if (strar[2] == "2") {
+                excludedList += strar[3].slice(1,-1);
+                if (excludedList.includes(',' + strar[0] + ',')) {} else {
+                    newList.push(array[i]);
+                    newAvailable[(strar[1]-1)] += 1;
+                };
+            };
+        };        
+        New1a.value = newAvailable[0];
+	New2a.value = newAvailable[1];
+	New3a.value = newAvailable[2];
+	New4a.value = newAvailable[3];
+	New5a.value = newAvailable[4];
+	New6a.value = newAvailable[5];
+	New7a.value = newAvailable[6];
+	New8a.value = newAvailable[7];
+	New9a.value = newAvailable[8];
+	New10a.value = newAvailable[9];
+	New11a.value = newAvailable[10];
+	New12a.value = newAvailable[11];
+	New13a.value = newAvailable[12];
+	New14a.value = newAvailable[13];
+	New15a.value = newList.length;
+
+        //Available old list
+        for (var i = 0; i < array.length - 1; i++) {
+            var strar = array[i].split(";");
+            if (strar[2] == "3") {
+                excludedList += strar[3].slice(1,-1);
+                if (excludedList.includes(',' + strar[0] + ',')) {} else {
+                    oldList.push(array[i]);
+                    oldAvailable[(strar[1]-1)] += 1;
+                };
+            };
+        };        
+        Old1a.value = oldAvailable[0];
+	Old2a.value = oldAvailable[1];
+	Old3a.value = oldAvailable[2];
+	Old4a.value = oldAvailable[3];
+	Old5a.value = oldAvailable[4];
+	Old6a.value = oldAvailable[5];
+	Old7a.value = oldAvailable[6];
+	Old8a.value = oldAvailable[7];
+	Old9a.value = oldAvailable[8];
+	Old10a.value = oldAvailable[9];
+	Old11a.value = oldAvailable[10];
+	Old12a.value = oldAvailable[11];
+	Old13a.value = oldAvailable[12];
+	Old14a.value = oldAvailable[13];
+	Old15a.value = oldList.length;        
+
+        //Available total (old+new)
+        Total1a.value = (oldAvailable[0] + newAvailable[0]);
+	Total2a.value = (oldAvailable[1] + newAvailable[1]);
+	Total3a.value = (oldAvailable[2] + newAvailable[2]);
+	Total4a.value = (oldAvailable[3] + newAvailable[3]);
+	Total5a.value = (oldAvailable[4] + newAvailable[4]);
+	Total6a.value = (oldAvailable[5] + newAvailable[5]);
+	Total7a.value = (oldAvailable[6] + newAvailable[6]);
+	Total8a.value = (oldAvailable[7] + newAvailable[7]);
+	Total9a.value = (oldAvailable[8] + newAvailable[8]);
+	Total10a.value = (oldAvailable[9] + newAvailable[9]);
+	Total11a.value = (oldAvailable[10] + newAvailable[10]);
+	Total12a.value = (oldAvailable[11] + newAvailable[11]);
+	Total13a.value = (oldAvailable[12] + newAvailable[12]);
+	Total14a.value = (oldAvailable[13] + newAvailable[13]);
+	Total15a.value = (oldList.length + newList.length);
+        
+        //Set maximum for each topic (new) 
+        document.getElementById('New1b').setAttribute('max', newAvailable[0]);
+	document.getElementById('New2b').setAttribute('max', newAvailable[1]);
+	document.getElementById('New3b').setAttribute('max', newAvailable[2]);
+	document.getElementById('New4b').setAttribute('max', newAvailable[3]);
+	document.getElementById('New5b').setAttribute('max', newAvailable[4]);
+	document.getElementById('New6b').setAttribute('max', newAvailable[5]);
+	document.getElementById('New7b').setAttribute('max', newAvailable[6]);
+	document.getElementById('New8b').setAttribute('max', newAvailable[7]);
+	document.getElementById('New9b').setAttribute('max', newAvailable[8]);
+	document.getElementById('New10b').setAttribute('max', newAvailable[9]);
+	document.getElementById('New11b').setAttribute('max', newAvailable[10]);
+	document.getElementById('New12b').setAttribute('max', newAvailable[11]);
+	document.getElementById('New13b').setAttribute('max', newAvailable[12]);
+	document.getElementById('New14b').setAttribute('max', newAvailable[13]);
+
+         //Set maximum for each topic (old) 
+        document.getElementById('Old1b').setAttribute('max', oldAvailable[0]);
+	document.getElementById('Old2b').setAttribute('max', oldAvailable[1]);
+	document.getElementById('Old3b').setAttribute('max', oldAvailable[2]);
+	document.getElementById('Old4b').setAttribute('max', oldAvailable[3]);
+	document.getElementById('Old5b').setAttribute('max', oldAvailable[4]);
+	document.getElementById('Old6b').setAttribute('max', oldAvailable[5]);
+	document.getElementById('Old7b').setAttribute('max', oldAvailable[6]);
+	document.getElementById('Old8b').setAttribute('max', oldAvailable[7]);
+	document.getElementById('Old9b').setAttribute('max', oldAvailable[8]);
+	document.getElementById('Old10b').setAttribute('max', oldAvailable[9]);
+	document.getElementById('Old11b').setAttribute('max', oldAvailable[10]);
+	document.getElementById('Old12b').setAttribute('max', oldAvailable[11]);
+	document.getElementById('Old13b').setAttribute('max', oldAvailable[12]);
+	document.getElementById('Old14b').setAttribute('max', oldAvailable[13]);
+
+	document.getElementById('myFile2').removeAttribute('disabled');
+        
+    }
+
+    function Load_Default() {
+        var string2 = document.getElementById('myTextArea2').value;
+        defaultList = string2.split("\n");
+        OldDefaultOrMax('Old1b', 0, 0);
+	OldDefaultOrMax('Old2b', 1, 1);
+	OldDefaultOrMax('Old3b', 2, 2);
+	OldDefaultOrMax('Old4b', 3, 3);
+	OldDefaultOrMax('Old5b', 4, 4);
+	OldDefaultOrMax('Old6b', 5, 5);
+	OldDefaultOrMax('Old7b', 6, 6);
+	OldDefaultOrMax('Old8b', 7, 7);
+	OldDefaultOrMax('Old9b', 8, 8);
+	OldDefaultOrMax('Old10b', 9, 9);
+	OldDefaultOrMax('Old11b', 10, 10);
+	OldDefaultOrMax('Old12b', 11, 11);
+	OldDefaultOrMax('Old13b', 12, 12);
+	OldDefaultOrMax('Old14b', 13, 13);
+	NewDefaultOrMax('New1b', 14, 0);
+	NewDefaultOrMax('New2b', 15, 1);
+	NewDefaultOrMax('New3b', 16, 2);
+	NewDefaultOrMax('New4b', 17, 3);
+	NewDefaultOrMax('New5b', 18, 4);
+	NewDefaultOrMax('New6b', 19, 5);
+	NewDefaultOrMax('New7b', 20, 6);
+	NewDefaultOrMax('New8b', 21, 7);
+	NewDefaultOrMax('New9b', 22, 8);
+	NewDefaultOrMax('New10b', 23, 9);
+	NewDefaultOrMax('New11b', 24, 10);
+	NewDefaultOrMax('New12b', 25, 11);
+	NewDefaultOrMax('New13b', 26, 12);
+	NewDefaultOrMax('New14b', 27, 13);
+
+	TopicDefaultTotal('Old1b', 'New1b', 'Total1b');
+	TopicDefaultTotal('Old2b', 'New2b', 'Total2b');
+	TopicDefaultTotal('Old3b', 'New3b', 'Total3b');
+	TopicDefaultTotal('Old4b', 'New4b', 'Total4b');
+	TopicDefaultTotal('Old5b', 'New5b', 'Total5b');
+	TopicDefaultTotal('Old6b', 'New6b', 'Total6b');
+	TopicDefaultTotal('Old7b', 'New7b', 'Total7b');
+	TopicDefaultTotal('Old8b', 'New8b', 'Total8b');
+	TopicDefaultTotal('Old9b', 'New9b', 'Total9b');
+	TopicDefaultTotal('Old10b', 'New10b', 'Total10b');
+	TopicDefaultTotal('Old11b', 'New11b', 'Total11b');
+	TopicDefaultTotal('Old12b', 'New12b', 'Total12b');
+	TopicDefaultTotal('Old13b', 'New13b', 'Total13b');
+	TopicDefaultTotal('Old14b', 'New14b', 'Total14b');
+
+        Old15b.value = OldDefaultTotal();
+	New15b.value = NewDefaultTotal();
+        Total15b.value = (OldDefaultTotal() + NewDefaultTotal());
+	if ((OldDefaultTotal() + NewDefaultTotal()) == 100) {
+	    document.getElementById('SaveSelection').removeAttribute('disabled');
+        } else {
+            document.getElementById('SaveSelection').setAttribute('disabled', true);
+        };
+    }
+
+    function OldDefaultOrMax(fieldId, index1, index2) {
+	if (defaultList[index1] > oldAvailable[index2]) {
+            document.getElementById(fieldId).value = Number(oldAvailable[index2]);
+        } else {
+            document.getElementById(fieldId).value = Number(defaultList[index1]);
+        };	
+    }
+
+    function NewDefaultOrMax(fieldId, index1, index2) {
+        if (defaultList[index1] > newAvailable[index2]) {
+	    document.getElementById(fieldId).value = Number(newAvailable[index2]);
+        } else {
+            document.getElementById(fieldId).value = Number(defaultList[index1]);
+        };	
+    }
+
+    function GetBoxValue(fieldId) {
+         let BoxValue = document.getElementById(fieldId).value;
+         return BoxValue;         
+    }
+
+    function OldDefaultTotal() {
+	 let total = (
+	     Number(GetBoxValue('Old1b')) 
+             + Number(GetBoxValue('Old2b'))
+             + Number(GetBoxValue('Old3b'))
+             + Number(GetBoxValue('Old4b'))
+             + Number(GetBoxValue('Old5b'))
+             + Number(GetBoxValue('Old6b'))
+             + Number(GetBoxValue('Old7b'))
+             + Number(GetBoxValue('Old8b'))
+             + Number(GetBoxValue('Old9b'))
+             + Number(GetBoxValue('Old10b'))
+             + Number(GetBoxValue('Old11b'))
+             + Number(GetBoxValue('Old12b'))
+             + Number(GetBoxValue('Old13b'))
+             + Number(GetBoxValue('Old14b'))
+         );
+         return total;
+    }
+
+    function NewDefaultTotal() {
+	 let total = (
+	     Number(GetBoxValue('New1b')) 
+             + Number(GetBoxValue('New2b'))
+             + Number(GetBoxValue('New3b'))
+             + Number(GetBoxValue('New4b'))
+             + Number(GetBoxValue('New5b'))
+             + Number(GetBoxValue('New6b'))
+             + Number(GetBoxValue('New7b'))
+             + Number(GetBoxValue('New8b'))
+             + Number(GetBoxValue('New9b'))
+             + Number(GetBoxValue('New10b'))
+             + Number(GetBoxValue('New11b'))
+             + Number(GetBoxValue('New12b'))
+             + Number(GetBoxValue('New13b'))
+             + Number(GetBoxValue('New14b'))
+         );
+         return total;
+    }
+
+    function TopicDefaultTotal(oldId, newId, totalId) {
+	 let total = Number(GetBoxValue(oldId)) + Number(GetBoxValue(newId));
+         document.getElementById(totalId).value = total;
+         document.getElementById('Old15b').value = OldDefaultTotal();
+	 document.getElementById('New15b').value = NewDefaultTotal();
+         document.getElementById('Total15b').value = (OldDefaultTotal() + NewDefaultTotal());
+         if ((OldDefaultTotal() + NewDefaultTotal()) == 100) {
+	     document.getElementById('SaveSelection').removeAttribute('disabled');
+         } else {
+             document.getElementById('SaveSelection').setAttribute('disabled', true);
+         };
+    }
+
+    function SaveSelection() {
+	newDefaultList = [];
+	//Selected list
+	newDefaultList.push(Old1b.value);
+	newDefaultList.push(Old2b.value);
+	newDefaultList.push(Old3b.value);
+	newDefaultList.push(Old4b.value);
+	newDefaultList.push(Old5b.value);
+	newDefaultList.push(Old6b.value);
+	newDefaultList.push(Old7b.value);
+	newDefaultList.push(Old8b.value);
+	newDefaultList.push(Old9b.value);
+	newDefaultList.push(Old10b.value);
+	newDefaultList.push(Old11b.value);
+	newDefaultList.push(Old12b.value);
+	newDefaultList.push(Old13b.value);
+	newDefaultList.push(Old14b.value);
+	newDefaultList.push(New1b.value);
+	newDefaultList.push(New2b.value);
+	newDefaultList.push(New3b.value);
+	newDefaultList.push(New4b.value);
+	newDefaultList.push(New5b.value);
+	newDefaultList.push(New6b.value);
+	newDefaultList.push(New7b.value);
+	newDefaultList.push(New8b.value);
+	newDefaultList.push(New9b.value);
+	newDefaultList.push(New10b.value);
+	newDefaultList.push(New11b.value);
+	newDefaultList.push(New12b.value);
+	newDefaultList.push(New13b.value);
+	newDefaultList.push(New14b.value);
+        
+	myTextArea3.value = newDefaultList;
+	myTextArea3.value = myTextArea3.value.split(",").join("\n");
+
+	//Selected new questions
+	excludedList = ",";
+        for (var i = 0; i < newList.length - 1; i++) {
+            var strar = newList[i].split(";");
+	    let n = Number(strar[1]) + 13;    
+	    if (newDefaultList[n] > 0) {           
+                excludedList += strar[3].slice(1,-1);
+                selectedQuestions.push(strar[0]);
+                newDefaultList[n] = (newDefaultList[n] - 1);
+	    };
+        };        
+	
+	//Selected old questions	
+        for (var i = 0; i < oldList.length - 1; i++) {
+            var strar = oldList[i].split(";");
+	    let n = Number(strar[1]) -1;    
+	    if (excludedList.includes(',' + strar[0] + ',')) {} else {
+                if (newDefaultList[n] > 0) {           
+                    selectedQuestions.push(strar[0]);
+                    newDefaultList[n] = (newDefaultList[n] - 1);
+	        };
+            };
+        };        
+
+	selectedQuestions.sort(function(a, b){return a - b});
+        myTextArea4.value = selectedQuestions;
+	myTextArea4.value = myTextArea4.value.split(",").join("\n");
+
+	document.getElementById('prepare-button').removeAttribute('disabled');
+
+    }
+
+    prepareButton.onclick = function () {
+
+        const zipFile = new JSZip();
+ 
+        zipFile.file("PartI_Physics_Default.txt", myTextArea3.value);
+	zipFile.file("PartI_Physics_Selection.txt", myTextArea4.value);
+
+        zipFile.generateAsync({ type: "blob" }).then(function (zipFileBlob) {
+            const zipFileUrl = URL.createObjectURL(zipFileBlob);
+            downloadLink.setAttribute("href", zipFileUrl);
+        })
+    }
+
+
+
+    function ResetForm(){
+	location.reload();
+    }
+
+    </script>
+
+</body>
+ 
+</html>
