@@ -1,21 +1,27 @@
 const authors = [
 "2017Collection",
 "BT Kung",
+"Charmaine Wong",
 "CM Lok",
 "CM Tong",
 "CP Wong",
+"K S Ng",
+"Kam KH",
 "KC Cheng",
 "KK Wong",
 "KM Ma",
 "KN Wong",
 "KS Chu",
 "NY Pang",
+"PM Wu",
 "PT Choi",
 "Sam Wu",
 "SC Wong",
 "Shiobhon Luk",
 "SK Cheung",
 "TK Auyong",
+"TK Chow",
+"WC Wong",
 "WH Ma",
 "WY Ho",
 "YH Hui"
@@ -24,7 +30,6 @@ const authors = [
 const keywordsByTopic = [];
 
 keywordsByTopic['1'] = [
-"Adenosine",
 "Alzheimer's disease",
 "Attenuation correction",
 "Brain death",
@@ -46,6 +51,7 @@ keywordsByTopic['1'] = [
 ];
 
 keywordsByTopic['2'] = [
+"Adenosine",
 "Amyloidosis",
 "Calcium score",
 "Cardiac output",
@@ -53,6 +59,7 @@ keywordsByTopic['2'] = [
 "Dipyridamole",
 "Dobutamine",
 "Dual isotope",
+"Echocardiogram",
 "Effective half-life",
 "Gated SPECT MPI",
 "Heart failure",
@@ -75,7 +82,8 @@ keywordsByTopic['2'] = [
 "Reconstruction artefact",
 "Reverse redistribution",
 "Right auricle",
-"Sarcoidosis"
+"Sarcoidosis",
+"Takotsubo cardiomyopathy"
 ];
 
 keywordsByTopic['3'] = [
@@ -108,6 +116,7 @@ keywordsByTopic['4'] = [
 "GE reflux",
 "GI bleeding",
 "Haemangioma",
+"hepatocellular carcinoma",
 "Impaired fundic accomodation",
 "Inflammatory bowel disease",
 "Liver abscess",
@@ -124,6 +133,7 @@ keywordsByTopic['5'] = [
 "Captopril scan",
 "Deconvolution",
 "Dehydration",
+"Differential function",
 "DMSA",
 "F-15",
 "Hydration",
@@ -143,9 +153,13 @@ keywordsByTopic['5'] = [
 
 keywordsByTopic['6'] = [
 "Blood volume",
+"Marrow imaging",
+"Myeloma",
 "Pernicious anaemia",
+"plasmacytosis",
 "Red cell mass",
-"Red cell survival"
+"Red cell survival",
+"Splenic imaging"
 ];
 
 keywordsByTopic['7'] = [
@@ -173,6 +187,7 @@ keywordsByTopic['7'] = [
 keywordsByTopic['8'] = [
 "Astrocytoma",
 "Brain tumour",
+"Breast cancer",
 "Breast SLN",
 "Bronchogenic carcinoma",
 "Cancer incidence",
@@ -184,6 +199,7 @@ keywordsByTopic['8'] = [
 "HCC treatment",
 "Hodgkin's lymphoma",
 "IgG4- related disease",
+"IPMN",
 "Karnofsky score",
 "Langerhans cell histiocytosis",
 "Liver metastasis",
@@ -244,6 +260,7 @@ keywordsByTopic['10'] = [
 "Chronic sclerosing osteomyelitis",
 "Complex regional pain syndrome",
 "Diabetic",
+"Diffuse idiopathic skeletal hyperostosis",
 "DXA",
 "DXA exclude vertebra",
 "DXA FRAX",
@@ -255,6 +272,7 @@ keywordsByTopic['10'] = [
 "Fracture",
 "Fragility fracture",
 "FRAX",
+"Gout",
 "Haemangioma",
 "Herniation pit",
 "Heterotrophic ossification",
@@ -337,6 +355,7 @@ keywordsByTopic['12'] = [
 "Octreotide scan",
 "P-32",
 "PRRT",
+"PSMA therapy",
 "Radiosynovectomy",
 "Radium-223",
 "SIRT",
@@ -373,6 +392,7 @@ keywordsByTopic['13'] = [
 "Focal nodular hyperplasia",
 "Frontal lobe pilepsy",
 "Giant cell arteritis",
+"Guideline",
 "Hamartoma",
 "Head and neck cancer",
 "Hibernating myocardium",
@@ -395,7 +415,7 @@ keywordsByTopic['13'] = [
 "Movement disorder",
 "Multiple Myeloma",
 "Myocardial perfusion agent",
-"Non-Hodgkin??s lymphoma",
+"Non-Hodgkin��s lymphoma",
 "Oesophagea cancer",
 "Ovarian cancer",
 "Paratracheal mass",
@@ -404,6 +424,7 @@ keywordsByTopic['13'] = [
 "PET brain tracer",
 "POEMS",
 "Prostate cancer",
+"PSMA",
 "Radiation dose",
 "Renal cell carcinoma",
 "Rubidium-82",
@@ -417,10 +438,13 @@ keywordsByTopic['13'] = [
 
 keywordsByTopic['14'] = [
 "Acute radiation syndrome",
+"Dacroscintigraphy",
 "Darcyoscinitgraphy",
 "Epididymitis",
 "Ge-Ga generator",
 "Generator QC",
+"Journal Appraisal",
+"LeVeen Shunt Scintigraphy",
 "Lymphoscintigraphy",
 "Menorrhagia",
 "Neurofibromatosis",
@@ -428,6 +452,7 @@ keywordsByTopic['14'] = [
 "Personalized medicine ",
 "Radiation Protection",
 "Radiochemical purity",
+"Salivary Gland Scintigraphy",
 "Scrotal scintigraphy",
 "Statistics",
 "Testicular Torsion"
