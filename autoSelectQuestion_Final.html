@@ -540,7 +540,7 @@
 
 	//Selected new questions
 	excludedList = ",";
-        for (var i = 0; i < newList.length - 1; i++) {
+        for (var i = 0; i < newList.length; i++) {
             var strar = newList[i].split(";");
 	    let n = Number(strar[1]) + 13;    
 	    if (newDefaultList[n] > 0) {           
@@ -551,7 +551,7 @@
         };        
 	
 	//Selected old questions	
-        for (var i = 0; i < oldList.length - 1; i++) {
+        for (var i = 0; i < oldList.length; i++) {
             var strar = oldList[i].split(";");
 	    let n = Number(strar[1]) -1;    
 	    if (excludedList.includes(',' + strar[0] + ',')) {} else {
